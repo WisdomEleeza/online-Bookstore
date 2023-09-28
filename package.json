@@ -25,6 +25,7 @@
     "eslint-plugin-prettier": "^5.0.0",
     "nodemon": "^3.0.1",
     "prettier": "^3.0.3",
+    "prisma": "^5.3.1",
     "tsc-watch": "^6.0.4",
     "typescript": "^5.2.2"
   },
