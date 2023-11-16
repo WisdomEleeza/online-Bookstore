@@ -1,7 +1,7 @@
 {
   "name": "online-bookstore",
   "version": "1.0.0",
-  "description": "-   npm init -y",
+  "description": "An API for online-bookstore",
   "main": "index.js",
   "scripts": {
     "build": "rimraf dist && npx tsc",
