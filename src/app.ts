@@ -21,9 +21,9 @@ class App {
     this.express.use(helmet());
     this.express.use(compression());
     this.express.use(cors());
-    this.express.use(morgan('dev'));
-    this.express.use(express.json())
-    this.express.use(urlencoded({extended: true}))
+    this.express.use(morgan("dev"));
+    this.express.use(express.json());
+    this.express.use(urlencoded({ extended: true }));
   }
 
   public listen(): void {
