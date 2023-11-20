@@ -3,7 +3,7 @@ import compression from "compression";
 import cors from "cors";
 import morgan from "morgan";
 import helmet from "helmet";
-// import { PrismaClient } from '@prisma/client'
+// import { PrismaClient } from "@prisma/client";
 // const prisma = new PrismaClient()
 
 class App {
@@ -15,6 +15,7 @@ class App {
     this.port = port;
 
     this.initialiseMiddleware();
+    this.initialiseDatabase()
   }
 
   private initialiseMiddleware(): void {
@@ -24,6 +25,10 @@ class App {
     this.express.use(morgan("dev"));
     this.express.use(express.json());
     this.express.use(urlencoded({ extended: true }));
+  }
+
+  private initialiseDatabase(): void {
+    // prisma.$connect(`postgresql://${POSTGRES_DB}`);
   }
 
   public listen(): void {
