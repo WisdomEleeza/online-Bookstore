@@ -3,7 +3,9 @@ import compression from "compression";
 import cors from "cors";
 import morgan from "morgan";
 import helmet from "helmet";
+// import { Logger } from "concurrently";
 import { PrismaClient } from "@prisma/client";
+import logger from "utils/logger";
 
 class App {
   public express: Application;
@@ -43,7 +45,7 @@ class App {
   public listen(): void {
     this.prisma.$connect();
     this.express.listen(this.port, () => {
-      console.log(`App is listening on port ${this.port}`);
+      logger.info(`App is listening on port ${this.port}`);
     });
   }
 }
