@@ -3,19 +3,19 @@ import compression from "compression";
 import cors from "cors";
 import morgan from "morgan";
 import helmet from "helmet";
-// import { PrismaClient } from "@prisma/client";
-// const prisma = new PrismaClient()
+import { PrismaClient } from "@prisma/client";
 
 class App {
   public express: Application;
   public port: number;
-
+  private prisma!: PrismaClient;
+  
   constructor(port: number) {
     this.express = express();
     this.port = port;
 
     this.initialiseMiddleware();
-    this.initialiseDatabase()
+    this.initialiseDatabase();
   }
 
   private initialiseMiddleware(): void {
@@ -28,10 +28,20 @@ class App {
   }
 
   private initialiseDatabase(): void {
-    // prisma.$connect(`postgresql://${POSTGRES_DB}`);
+    const { POSTGRES_DB, POSTGRES_PASSWORD, POSTGRES_PATH } = process.env;
+
+    // Use these variables for PostgreSQL connection
+    this.prisma = new PrismaClient({
+      datasources: {
+        db: {
+          url: `postgresql://${POSTGRES_DB}:${POSTGRES_PASSWORD}${POSTGRES_PATH}`,
+        },
+      },
+    });
   }
 
   public listen(): void {
+    this.prisma.$connect();
     this.express.listen(this.port, () => {
       console.log(`App is listening on port ${this.port}`);
     });
