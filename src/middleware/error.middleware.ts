@@ -5,7 +5,7 @@ function errorMiddleware(
   error: HttpException,
   req: Request,
   res: Response,
-//   _next: NextFunction,
+  // _next: NextFunction,
 ): void {
   const status = error.status || 500;
   const message = error.message || "Something went wrong";

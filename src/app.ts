@@ -6,18 +6,20 @@ import helmet from "helmet";
 // import { Logger } from "concurrently";
 import { PrismaClient } from "@prisma/client";
 import logger from "utils/logger";
+import errorMiddleware from "middleware/error.middleware";
 
 class App {
   public express: Application;
   public port: number;
   private prisma!: PrismaClient;
-  
+
   constructor(port: number) {
     this.express = express();
     this.port = port;
 
     this.initialiseMiddleware();
     this.initialiseDatabase();
+    this.initialiseErrorMiddleware();
   }
 
   private initialiseMiddleware(): void {
@@ -27,6 +29,10 @@ class App {
     this.express.use(morgan("dev"));
     this.express.use(express.json());
     this.express.use(urlencoded({ extended: true }));
+  }
+
+  private initialiseErrorMiddleware(): void {
+    this.express.use(errorMiddleware);
   }
 
   private initialiseDatabase(): void {
