@@ -12,3 +12,12 @@ export const createToken = (user: User): string => {
     expiresIn: "1d",
   });
 };
+
+export const verifyToken = (token: string) => {
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET as string);
+    return { isValid: true, decoded };
+  } catch (error) {
+    return { isValid: false };
+  }
+};
