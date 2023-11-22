@@ -1,0 +1,37 @@
+The docker ps command is used in Docker to list the containers that are currently running on your system. 
+By default, it displays a list of running containers along with some key information about each container, 
+such as the container ID, image name, status, ports, and names. Here's the basic syntax:
+
+bash
+Copy code
+docker ps [OPTIONS]
+Some common options and flags you can use with docker ps include:
+
+-a or --all: This option shows all containers, including stopped ones. By default, docker ps only displays running containers.
+
+-q or --quiet: This option displays only the container IDs, which can be useful when you need to get a list of container IDs for scripting or other automation tasks.
+
+--filter: You can use filters to display containers that match specific criteria. For example, docker ps --filter "status=running" would only show running containers.
+
+-n or --last: This option allows you to specify the number of containers to display, starting with the most recently created ones.
+
+Here's an example of using docker ps:
+
+bash
+Copy code
+docker ps -a
+This command will list all containers, both running and stopped, on your system.
+
+Keep in mind that docker ps is a read-only command for listing containers. 
+If you want to create or manage containers, you would use other Docker commands like docker run, docker stop, docker start, 
+docker restart, etc., in combination with the container names or IDs obtained from docker ps.
+
+
+///# COMMANDS
+docker compose up bookmark -
+docker ps
+docker logs ad0e6b2aedff
+docker logs -f ad0
+  "db:dev:rm": "docker compose rm bookmark -s -f -v",
+  "db:dev:up": "docker compose up bookmark -d",
+  "db:dev:restart": "npm run db:dev:rm && npm run db:dev:up",
