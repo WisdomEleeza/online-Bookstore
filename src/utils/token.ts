@@ -18,7 +18,7 @@ export const verifyToken = (token: string) => {
     const decoded = jwt.verify(
       token,
       process.env.JWT_SECRET as string,
-    ) as  { id: string };
+    )
     return { isValid: true, decoded };
   } catch (error) {
     return { isValid: false };
