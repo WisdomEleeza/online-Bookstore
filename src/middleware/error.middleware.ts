@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import HttpException from "utils/http.exception";
+import HttpException from "@/utils/http.exception";
 
 function errorMiddleware(
   error: HttpException,
