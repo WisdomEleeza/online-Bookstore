@@ -13,7 +13,7 @@ export const createToken = (user: User): string => {
   });
 };
 
-export const verifyToken = (token: string) => {
+export  const verifyToken = (token: string) => {
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET as string);
     return { isValid: true, decoded };
@@ -21,3 +21,5 @@ export const verifyToken = (token: string) => {
     return { isValid: false };
   }
 };
+
+export default { createToken, verifyToken };
