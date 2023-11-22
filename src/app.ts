@@ -36,13 +36,13 @@ class App {
   }
 
   private initialiseDatabase(): void {
-    const { POSTGRES_DB, POSTGRES_PASSWORD, POSTGRES_PATH } = process.env;
+    const { POSTGRES_USER, POSTGRES_PASSWORD, POSTGRES_PATH } = process.env;
 
     // Use these variables for PostgreSQL connection
     this.prisma = new PrismaClient({
       datasources: {
         db: {
-          url: `postgresql://${POSTGRES_DB}:${POSTGRES_PASSWORD}${POSTGRES_PATH}`,
+          url: `postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}${POSTGRES_PATH}`,
         },
       },
     });

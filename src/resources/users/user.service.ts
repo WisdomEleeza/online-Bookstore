@@ -10,7 +10,7 @@ class UserServices {
     email: string,
     password: string,
     role: string,
-  ) {
+  ): Promise<string | Error> {
     try {
       const user = await this.prisma.user.create({
         data: {
