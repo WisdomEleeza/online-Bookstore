@@ -20,6 +20,7 @@ class App {
     this.initialiseMiddleware();
     this.initialiseDatabase();
     this.initialiseErrorMiddleware();
+    this.initialiseController()
   }
 
   private initialiseMiddleware(): void {
@@ -29,6 +30,10 @@ class App {
     this.express.use(morgan("dev"));
     this.express.use(express.json());
     this.express.use(urlencoded({ extended: true }));
+  }
+
+  private initialiseController(): void {
+    this.express.use('/api')
   }
 
   private initialiseErrorMiddleware(): void {

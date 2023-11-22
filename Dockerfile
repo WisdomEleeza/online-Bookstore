@@ -1,5 +1,5 @@
 # Use the official Node.js 20.9.0 image as the base image
-FROM node:20.9.0
+FROM node:21.2.0
 
 # Set the NODE_ENV environment variable to production
 ENV NODE_ENV=production
