@@ -14,13 +14,17 @@ function validationMiddleware(schema: Joi.Schema): RequestHandler {
     };
 
     try {
-        const value = await schema.validateAsync(req.body, validationOptions)
-        req.body = value
-        next()
+      const value = await schema.validateAsync(req.body, validationOptions);
+      req.body = value;
+      next();
     } catch (error) {
-        
+      const errors: string[] = [];
+      (error as Joi.ValidationError).details.forEach((error: Joi.ValidationErrorItem) => {
+        errors.push(error.message);
+      });
+      res.status(400).send({ errors: errors });
     }
   };
 }
 
-export default validationMiddleware
+export default validationMiddleware;

@@ -5,8 +5,8 @@ import morgan from "morgan";
 import helmet from "helmet";
 // import { Logger } from "concurrently";
 import { PrismaClient } from "@prisma/client";
-import logger from "utils/logger";
-import errorMiddleware from "middleware/error.middleware";
+import logger from "./utils/logger";
+import errorMiddleware from "./middleware/error.middleware";
 
 class App {
   public express: Application;
@@ -20,7 +20,7 @@ class App {
     this.initialiseMiddleware();
     this.initialiseDatabase();
     this.initialiseErrorMiddleware();
-    this.initialiseController()
+    // this.initialiseController()
   }
 
   private initialiseMiddleware(): void {
@@ -32,9 +32,9 @@ class App {
     this.express.use(urlencoded({ extended: true }));
   }
 
-  private initialiseController(): void {
-    this.express.use('/api')
-  }
+  // private initialiseController(): void {
+  //   this.express.use('/api')
+  // }
 
   private initialiseErrorMiddleware(): void {
     this.express.use(errorMiddleware);
