@@ -8,20 +8,25 @@ dotenv.config();
 
 // Define a function that creates a JWT for a given user
 export const createToken = (user: User): string => {
-  return jwt.sign({ id: user.id }, process.env.JWT_SECRET as string, {
-    expiresIn: "1d",
-  });
+  try {
+    return jwt.sign({ id: user.id }, process.env.JWT_SECRET as string, {
+      expiresIn: "1d",
+    });
+  } catch (error) {
+    console.error("Error creating token:", error);
+    throw new Error("Unable to create token");
+  }
 };
 
 export const verifyToken = (token: string) => {
   try {
-    const decoded = jwt.verify(
-      token,
-      process.env.JWT_SECRET as string,
-    )
-    return { isValid: true, decoded };
+    const decoded = jwt.verify(token, process.env.JWT_SECRET as string);
+    return decoded;
   } catch (error) {
-    return { isValid: false };
+    if (error instanceof Error) {
+      console.error("Error verifying token:", error);
+      return error;
+    }
   }
 };
 

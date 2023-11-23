@@ -3,7 +3,6 @@ import compression from "compression";
 import cors from "cors";
 import morgan from "morgan";
 import helmet from "helmet";
-// import { Logger } from "concurrently";
 import { PrismaClient } from "@prisma/client";
 import logger from "./utils/logger";
 import errorMiddleware from "./middleware/error.middleware";

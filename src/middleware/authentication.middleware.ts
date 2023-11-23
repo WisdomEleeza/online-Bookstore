@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from "express";
-import * as token from "@/utils/token"; // Assuming token is an object with types
+import token from "@/utils/token"; // Assuming token is an object with types
 import HttpException from "@/utils/http.exception";
-import jwt from "jsonwebtoken";
+import { JsonWebTokenError } from "jsonwebtoken"; // Import JsonWebTokenError from jsonwebtoken
 import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
@@ -20,20 +20,25 @@ async function authenticatedMiddleware(
   try {
     const payload = token.verifyToken(accessToken);
 
-    if (payload instanceof jwt.JsonWebTokenError) {
+    if (payload instanceof JsonWebTokenError) {
       return next(new HttpException(401, "Unauthorized"));
     }
 
-    const user = await prisma.user.findUnique({
-      where: { id: payload.id },
-      select: { password: false },
-    });
+    // Check if payload is not undefined and has the expected structure
+    if (payload && typeof payload === "object" && "id" in payload) {
+      const user = await prisma.user.findUnique({
+        where: { id: payload.id },
+        select: { password: false },
+      });
 
-    if (!user) return next(new HttpException(401, "Unauthorized"));
+      if (!user) return next(new HttpException(401, "Unauthorized"));
 
-    // req.user = user;
+      // req.user = user;
 
-    return next();
+      return next();
+    } else {
+      return next(new HttpException(401, "Unauthorized"));
+    }
   } catch (error) {
     return next(new HttpException(401, "Unauthorized"));
   }
