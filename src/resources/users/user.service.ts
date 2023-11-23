@@ -21,7 +21,7 @@ class UserServices {
         },
       });
       const accessToken = token.createToken(user);
-
+      // res.cookies('jwt', accessToken, { httpOnly: true, maxAge: maxAge * 1000})
       return accessToken;
     } catch (error) {
       if (error instanceof Error) {
