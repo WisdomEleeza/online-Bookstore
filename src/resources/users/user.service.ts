@@ -1,5 +1,6 @@
 import { PrismaClient } from "@prisma/client";
-import token from "@/utils/token";
+// import token from "@/utils/token";
+import token from '../../utils/token'
 const prisma = new PrismaClient();
 
 class UserServices {
