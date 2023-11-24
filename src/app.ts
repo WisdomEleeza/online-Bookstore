@@ -19,7 +19,7 @@ class App {
 
     this.initialiseMiddleware();
     this.initialiseDatabase();
-    this.initialiseErrorMiddleware();
+    // this.initialiseErrorMiddleware();
     this.initialiseController();
   }
 
@@ -30,6 +30,8 @@ class App {
     this.express.use(morgan("dev"));
     this.express.use(express.json());
     this.express.use(urlencoded({ extended: true }));
+    this.express.use("/api", new UserController().router);
+    this.express.use(errorMiddleware);
   }
 
   private initialiseController(): void {
@@ -37,9 +39,9 @@ class App {
     this.express.use("/api", userController.router);
   }
 
-  private initialiseErrorMiddleware(): void {
-    this.express.use(errorMiddleware);
-  }
+  // private initialiseErrorMiddleware(): void {
+  //   this.express.use(errorMiddleware);
+  // }
 
   private initialiseDatabase(): void {
     const { POSTGRES_USER, POSTGRES_PASSWORD, POSTGRES_PATH } = process.env;

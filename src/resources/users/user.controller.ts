@@ -1,7 +1,10 @@
 import { Router, Request, Response, NextFunction } from "express";
-import HttpException from "@/utils/http.exception";
-import validationMiddleware from "@/middleware/validation.middleware";
-import validation from "@/resources/users/user.validate";
+// import HttpException from "@/utils/http.exception";
+import HttpException from "../../utils/http.exception";
+// import validationMiddleware from "@/middleware/validation.middleware";
+import validationMiddleware from "../../middleware/validation.middleware";
+// import validation from "@/resources/users/user.validate";
+import validation from "../../resources/users/user.validate";
 import UserServices from "./user.service";
 
 class UserController {
@@ -34,7 +37,13 @@ class UserController {
         "user",
       );
 
-      res.status(201).json(token)
+      res
+        .status(201)
+        .json({
+          success: true,
+          message: "User Registered Successfully",
+          token: token,
+        });
     } catch (error) {
       if (error instanceof Error)
         return next(new HttpException(400, error.message));
