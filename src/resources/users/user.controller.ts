@@ -3,7 +3,6 @@ import HttpException from "@/utils/http.exception";
 import validationMiddleware from "@/middleware/validation.middleware";
 import validation from "@/resources/users/user.validate";
 import UserServices from "./user.service";
-import authenticated from "@/middleware/authentication.middleware";
 
 class UserController {
   public router = Router();
