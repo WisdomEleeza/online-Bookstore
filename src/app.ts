@@ -1,4 +1,4 @@
-import express, { Application, urlencoded } from "express";
+import express, { Application, Router, urlencoded } from "express";
 import compression from "compression";
 import cors from "cors";
 import morgan from "morgan";
@@ -6,8 +6,10 @@ import helmet from "helmet";
 import { PrismaClient } from "@prisma/client";
 import logger from "./utils/logger";
 import errorMiddleware from "./middleware/error.middleware";
+import UserController from "./resources/users/user.controller";
 
 class App {
+  public router = Router()
   public express: Application;
   public port: number;
   private prisma!: PrismaClient;
@@ -19,7 +21,7 @@ class App {
     this.initialiseMiddleware();
     this.initialiseDatabase();
     this.initialiseErrorMiddleware();
-    // this.initialiseController()
+    this.initialiseController();
   }
 
   private initialiseMiddleware(): void {
@@ -31,9 +33,10 @@ class App {
     this.express.use(urlencoded({ extended: true }));
   }
 
-  // private initialiseController(): void {
-  //   this.express.use('/api')
-  // }
+  private initialiseController(): void {
+    this.express.use("/api", this.router);
+    // this.express.use("/api", UserController)
+  }
 
   private initialiseErrorMiddleware(): void {
     this.express.use(errorMiddleware);
