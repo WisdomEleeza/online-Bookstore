@@ -14,4 +14,4 @@ const login = Joi.object({
   password: Joi.string().min(8).required(),
 });
 
-export default {login register} ;
+export default { login, register };
