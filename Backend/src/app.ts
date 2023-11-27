@@ -31,11 +31,10 @@ class App {
     this.express.use(express.json());
     this.express.use(urlencoded({ extended: true }));
     this.express.use(new UserController().router);
-    // this.express.use(errorMiddleware);
   }
 
   private initialiseController(): void {
-    const userController = new UserController(); 
+    const userController = new UserController();
     this.express.use("/api", userController.router);
   }
 
