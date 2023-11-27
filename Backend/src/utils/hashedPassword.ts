@@ -1,10 +1,13 @@
-// (async () => {
-//   // Technique 1 (generate a salt and hash on separate function calls):
-//   const salt = await bcrypt.genSalt(saltRounds);
-//   const hash = await bcrypt.hash(myPlaintextPassword, salt);
-//   // Store hash in your password DB.
+// import bcrypt from "bcrypt";
 
-//   // Technique 2 (auto-gen a salt and hash):
-//   const hash2 = await bcrypt.hash(myPlaintextPassword, saltRounds);
-//   // Store hash in your password DB.
-// })();
+// const hashedPassword = () => {
+//   try {
+//     const salt = bcrypt.genSalt(10);
+//     console.log(`Salt:: ${salt}`);
+//     bcrypt.hash(, salt);
+//   } catch (error) {
+//     console.log(error);
+//   }
+// };
+
+// export default hashedPassword;

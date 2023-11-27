@@ -1,8 +1,10 @@
 import { PrismaClient } from "@prisma/client";
 import token from "../../utils/token";
+import bcrypt from "bcrypt";
 
 class UserServices {
   private prisma: PrismaClient;
+  // private saltRounds = 10
 
   constructor() {
     this.prisma = new PrismaClient();
@@ -15,12 +17,14 @@ class UserServices {
     role: string,
   ): Promise<string> {
     try {
+      const hashedPassword = await bcrypt.hash(password, 10);
+
       const user = await this.prisma.user.create({
         data: {
-          name,
-          email,
-          password,
-          role,
+          name: name,
+          email: email,
+          password: hashedPassword,
+          role: role,
         },
       });
       const accessToken = token.createToken(user);
