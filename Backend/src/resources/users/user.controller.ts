@@ -21,9 +21,11 @@ class UserController {
       validationMiddleware(validation.register),
       this.register,
     );
-    this.router.post("/users/login", validationMiddleware(validation.login));
-
-    // this.router.post("/users/login", validationMiddleware(validation.login));
+    this.router.post(
+      "/users/login",
+      validationMiddleware(validation.login),
+      this.login,
+    );
   }
 
   private register = async (
@@ -59,7 +61,9 @@ class UserController {
     try {
       const { email, password } = req.body;
       const token = await this.UserServices.login(email, password);
-      res.status(200).json(token);
+      res
+        .status(200)
+        .json({ success: true, message: "Login Successfully", token: token });
     } catch (error) {
       if (error instanceof Error) {
         return next(new HttpException(400, error.message));
