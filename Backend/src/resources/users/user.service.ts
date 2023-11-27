@@ -1,6 +1,6 @@
 import { PrismaClient } from "@prisma/client";
 // import token from "@/utils/token";
-import token from '../../utils/token'
+import token from "../../utils/token";
 const prisma = new PrismaClient();
 
 class UserServices {
@@ -30,6 +30,26 @@ class UserServices {
       } else {
         throw new Error("An Unexpected Error Occurred");
       }
+    }
+  }
+
+  public async login(email: string, password: string): Promise<string | Error> {
+    try {
+      const user = await this.prisma.user.findUnique({
+          where: {email}
+      });
+
+      if (!user) {
+        throw new Error("Unable to find user with that email address");
+      }
+
+      if (await user.isValidPassword(password)) {
+        return token.createToken(user); 
+      } else {
+        throw new Error("Wrong credentials given");
+      }
+    } catch (error) {
+      throw new Error("Unable to create user");
     }
   }
 }
