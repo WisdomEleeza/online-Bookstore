@@ -21,8 +21,9 @@ class UserController {
       validationMiddleware(validation.register),
       this.register,
     );
-
     this.router.post("/users/login", validationMiddleware(validation.login));
+
+    // this.router.post("/users/login", validationMiddleware(validation.login));
   }
 
   private register = async (
@@ -50,12 +51,19 @@ class UserController {
     }
   };
 
-  private login = async (req: Request, res: Response, next: NextFunction): Promise<Response | void> => {
+  private login = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<Response | void> => {
     try {
-      const { email, password} = req.body 
-      const token = await this.UserServices.
+      const { email, password } = req.body;
+      const token = await this.UserServices.login(email, password);
+      res.status(200).json(token);
     } catch (error) {
-      
+      if (error instanceof Error) {
+        return next(new HttpException(400, error.message));
+      }
     }
   };
 }

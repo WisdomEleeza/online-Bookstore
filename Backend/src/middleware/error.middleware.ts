@@ -10,7 +10,7 @@ function errorMiddleware(
   const message = error.message || "Something went wrong"; // Use the message from HttpException or default to "Something went wrong"
 
   // Set the HTTP status and send a JSON response with status and message
-  res.status(status).send({
+  res.status(status).json({
     status,
     message,
   });
