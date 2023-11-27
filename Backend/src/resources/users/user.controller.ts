@@ -21,6 +21,8 @@ class UserController {
       validationMiddleware(validation.register),
       this.register,
     );
+
+    this.router.post("/users/login", validationMiddleware(validation.login));
   }
 
   private register = async (
@@ -37,16 +39,23 @@ class UserController {
         "user",
       );
 
-      res
-        .status(201)
-        .json({
-          success: true,
-          message: "User Registered Successfully",
-          token: token,
-        });
+      res.status(201).json({
+        success: true,
+        message: "User Registered Successfully",
+        token: token,
+      });
     } catch (error) {
       if (error instanceof Error)
         return next(new HttpException(400, error.message));
+    }
+  };
+
+  private login = async (req: Request, res: Response, next: NextFunction): Promise<Response | void> => {
+    try {
+      const { email, password} = req.body 
+      const token = await this.UserServices.
+    } catch (error) {
+      
     }
   };
 }
