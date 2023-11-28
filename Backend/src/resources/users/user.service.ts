@@ -4,7 +4,6 @@ import bcrypt from "bcrypt";
 
 class UserServices {
   private prisma: PrismaClient;
-  // private saltRounds = 10
 
   constructor() {
     this.prisma = new PrismaClient();
@@ -17,7 +16,8 @@ class UserServices {
     role: string,
   ): Promise<string> {
     try {
-      const hashedPassword = await bcrypt.hash(password, 10);
+      const salt = await bcrypt.genSalt(10);
+      const hashedPassword = await bcrypt.hash(password, salt);
 
       const user = await this.prisma.user.create({
         data: {
@@ -42,17 +42,18 @@ class UserServices {
         where: { email },
       });
 
-      if (!user) {
-        throw new Error("Unable to find user with that email address");
-      }
+      if (!user) throw new Error("Unable to find user with that email address");
 
-      if (user.password === password) {
+      const hashedPassword = await bcrypt.compare(password, user.password);
+
+      if (hashedPassword) {
         return token.createToken(user);
       } else {
         throw new Error("Wrong credentials given");
       }
     } catch (error) {
-      console.error("Error during user login:", error);
+      console.log(error);
+
       throw new Error("Unable to log in");
     }
   }
