@@ -83,13 +83,15 @@ class UserController {
     res: Response,
     next: NextFunction,
   ): Promise<Response | void> => {
-    const { userId, name, shippingAddress, paymentMethod } = req.body;
+    const { name, shippingAddress, paymentMethod } = req.body;
 
     const { error } = validation.userProfile.validate({
       name,
       shippingAddress,
       paymentMethod,
     });
+
+    if (error) throw new Error(error.message);
   };
 }
 
