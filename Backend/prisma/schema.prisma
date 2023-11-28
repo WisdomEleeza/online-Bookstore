@@ -20,3 +20,9 @@ model User {
   createdAt       DateTime @default(now())
   updateAt        DateTime @updatedAt()
 }
+
+model UserProfile {
+  id              String @id @default(uuid())
+  shippingAddress String
+  paymentMethod   String
+}

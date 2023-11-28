@@ -1,7 +1,6 @@
 import { PrismaClient, User } from "@prisma/client";
 import token from "../../utils/token";
 import bcrypt from "bcrypt";
-import { NextFunction } from "express";
 
 class UserServices {
   private prisma: PrismaClient;
@@ -28,7 +27,6 @@ class UserServices {
       });
       const accessToken = token.createToken(user);
       return accessToken;
-      // res.cookies('jwt', accessToken, { httpOnly: true, maxAge: maxAge * 1000})
     } catch (error) {
       console.log("Error during user registration:", error);
       throw new Error("Unable to register user");
@@ -57,7 +55,7 @@ class UserServices {
     }
   }
 
-  public async userProfile(
+  public async updateProfile(
     userId: string,
     updateData: {
       name?: string;
@@ -66,12 +64,24 @@ class UserServices {
     },
   ): Promise<User> {
     try {
-      const user = await this.prisma.user.findUnique({ where: { id: userId } });
+      // Find the user in the database
+      const user = await this.prisma.user.findUnique({
+        where: { id: userId },
+      });
 
       if (!user) throw new Error("User not found");
 
-      
-    } catch (error) {}
+      // Update the user's profile
+      const updatedUser = await this.prisma.user.update({
+        where: { id: userId },
+        data: { ...user, ...updateData },
+      });
+
+      return updatedUser;
+    } catch (error) {
+      console.error("Error during profile update:", error);
+      throw new Error("Unable to update profile");
+    }
   }
 }
 

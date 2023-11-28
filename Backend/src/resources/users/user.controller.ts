@@ -36,11 +36,14 @@ class UserController {
   ): Promise<Response | void> => {
     try {
       const { name, email, password } = req.body;
-      const token = await this.UserServices.register(
-        name,
-        email,
-        password,
-      );
+      const token = await this.UserServices.register(name, email, password);
+
+      // const maxAge = 10;
+
+      // res.cookies("jwt", accessToken, {
+      //   httpOnly: true,
+      //   maxAge: maxAge * 1000,
+      // });
 
       res.status(201).json({
         success: true,
