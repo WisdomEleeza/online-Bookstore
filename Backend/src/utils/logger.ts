@@ -4,7 +4,10 @@ import * as winston from "winston";
 // Winston logger configuration
 const logger = winston.createLogger({
   level: "info", // Set the logging level to 'info'
-  format: winston.format.json(), // Use the JSON format for log entries
+  // level: "debub", // Set the logging level to 'info'
+  format: winston.format.combine(
+    winston.format.colorize(),
+    winston.format.simple()), // Use the JSON format for log entries
   defaultMeta: { service: "my-service" }, // Set default metadata for log entries
   transports: [
     new winston.transports.Console(), // Log to the console

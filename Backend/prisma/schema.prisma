@@ -12,9 +12,18 @@ datasource db {
 
 model User {
   id        String   @id @default(uuid())
+  name      String
   email     String   @unique()
+  address   String
   password  String
+  shipping  String
+  payment   String
   role      String
   createdAt DateTime @default(now())
   updateAt  DateTime @updatedAt
 }
+
+// enum {
+//   BASIC
+//   ADMIN
+// }

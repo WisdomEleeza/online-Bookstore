@@ -3,10 +3,10 @@ import compression from "compression";
 import cors from "cors";
 import morgan from "morgan";
 import helmet from "helmet";
-// import { Logger } from "concurrently";
 import { PrismaClient } from "@prisma/client";
-import logger from "utils/logger";
-import errorMiddleware from "middleware/error.middleware";
+import logger from "./utils/logger";
+import errorMiddleware from "./middleware/error.middleware";
+import UserController from "./resources/users/user.controller";
 
 class App {
   public express: Application;
@@ -20,6 +20,7 @@ class App {
     this.initialiseMiddleware();
     this.initialiseDatabase();
     this.initialiseErrorMiddleware();
+    this.initialiseController();
   }
 
   private initialiseMiddleware(): void {
@@ -29,6 +30,12 @@ class App {
     this.express.use(morgan("dev"));
     this.express.use(express.json());
     this.express.use(urlencoded({ extended: true }));
+    this.express.use(new UserController().router);
+  }
+
+  private initialiseController(): void {
+    const userController = new UserController();
+    this.express.use("/api", userController.router);
   }
 
   private initialiseErrorMiddleware(): void {
@@ -36,13 +43,13 @@ class App {
   }
 
   private initialiseDatabase(): void {
-    const { POSTGRES_DB, POSTGRES_PASSWORD, POSTGRES_PATH } = process.env;
+    const { POSTGRES_USER, POSTGRES_PASSWORD, POSTGRES_PATH } = process.env;
 
     // Use these variables for PostgreSQL connection
     this.prisma = new PrismaClient({
       datasources: {
         db: {
-          url: `postgresql://${POSTGRES_DB}:${POSTGRES_PASSWORD}${POSTGRES_PATH}`,
+          url: `postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}${POSTGRES_PATH}`,
         },
       },
     });
