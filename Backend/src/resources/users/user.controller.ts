@@ -26,6 +26,7 @@ class UserController {
       validationMiddleware(validation.login),
       this.login,
     );
+    // this.router.patch("/users/proflle-update", this.updateProfile);
   }
 
   private register = async (
@@ -39,7 +40,6 @@ class UserController {
         name,
         email,
         password,
-        "user",
       );
 
       res.status(201).json({
@@ -70,6 +70,15 @@ class UserController {
       }
     }
   };
+
+  // updateProfile = async (
+  //   req: Request,
+  //   res: Response,
+  //   next: NextFunction,
+  // ): Promise<Response | void> => {
+  //   const { name?, shippingAddress?, paymentMethod? } = req.body
+  //   const user = await this.pris
+  // };
 }
 
 export default UserController;
