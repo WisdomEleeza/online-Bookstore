@@ -26,7 +26,11 @@ class UserController {
       validationMiddleware(validation.login),
       this.login,
     );
-    // this.router.patch("/users/proflle-update", this.updateProfile);
+    this.router.patch(
+      "/users/proflle",
+      validationMiddleware(validation.userProfile),
+      this.updateProfile,
+    );
   }
 
   private register = async (
@@ -74,14 +78,19 @@ class UserController {
     }
   };
 
-  // updateProfile = async (
-  //   req: Request,
-  //   res: Response,
-  //   next: NextFunction,
-  // ): Promise<Response | void> => {
-  //   const { name?, shippingAddress?, paymentMethod? } = req.body
-  //   const user = await this.pris
-  // };
+  updateProfile = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<Response | void> => {
+    const { userId, name, shippingAddress, paymentMethod } = req.body;
+
+    const { error } = validation.userProfile.validate({
+      name,
+      shippingAddress,
+      paymentMethod,
+    });
+  };
 }
 
 export default UserController;
