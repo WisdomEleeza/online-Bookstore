@@ -72,12 +72,12 @@ class UserServices {
       if (!user) throw new Error("User not found");
 
       // Update the user's profile
-      const updatedUser = await this.prisma.user.update({
+      const updateUser = await this.prisma.user.update({
         where: { id: userId },
-        data: { ...user, ...updateData },
+        data: { ...updateData },
       });
 
-      return updatedUser;
+      return updateUser;
     } catch (error) {
       console.error("Error during profile update:", error);
       throw new Error("Unable to update profile");

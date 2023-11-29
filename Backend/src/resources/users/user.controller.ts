@@ -26,8 +26,8 @@ class UserController {
       validationMiddleware(validation.login),
       this.login,
     );
-    this.router.patch(
-      "/users/proflle/:id",
+    this.router.put(
+      "/users/profile/:id",
       validationMiddleware(validation.userProfile),
       this.updateProfile,
     );
@@ -95,7 +95,11 @@ class UserController {
         paymentMethod,
       });
 
-      return res.status(200).json(updatedUser);
+      return res.status(200).json({
+        success: true,
+        message: "User Profile Updated Successfully",
+        updatedUser,
+      });
     } catch (error) {
       if (error instanceof Error) {
         return next(new HttpException(400, error.message));
