@@ -27,7 +27,7 @@ class UserController {
       this.login,
     );
     this.router.patch(
-      "/users/proflle",
+      "/users/proflle/:id",
       validationMiddleware(validation.userProfile),
       this.updateProfile,
     );
@@ -78,20 +78,29 @@ class UserController {
     }
   };
 
-  updateProfile = async (
+  private updateProfile = async (
     req: Request,
     res: Response,
     next: NextFunction,
   ): Promise<Response | void> => {
-    const { name, shippingAddress, paymentMethod } = req.body;
+    try {
+      // Extract updated profile information from the request body
+      const { name, shippingAddress, paymentMethod } = req.body;
 
-    const { error } = validation.userProfile.validate({
-      name,
-      shippingAddress,
-      paymentMethod,
-    });
+      // Update the user's profile in the database
+      const { id } = req.params;
+      const updatedUser = await this.UserServices.updateProfile(id, {
+        name,
+        shippingAddress,
+        paymentMethod,
+      });
 
-    if (error) throw new Error(error.message);
+      return res.status(200).json(updatedUser);
+    } catch (error) {
+      if (error instanceof Error) {
+        return next(new HttpException(400, error.message));
+      }
+    }
   };
 }
 

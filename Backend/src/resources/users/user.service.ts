@@ -58,9 +58,9 @@ class UserServices {
   public async updateProfile(
     userId: string,
     updateData: {
-      name?: string;
-      shippingAddress?: string;
-      paymentMethod?: string;
+      name: string;
+      shippingAddress: string;
+      paymentMethod: string;
     },
   ): Promise<User> {
     try {
