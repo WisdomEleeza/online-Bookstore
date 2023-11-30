@@ -15,9 +15,18 @@ model User {
   name            String
   email           String   @unique()
   password        String
-  shippingAddress String?
-  paymentMethod   String?   @default("")
+  shippingAddress String
+  paymentMethod   String   @default("")
   createdAt       DateTime @default(now())
   updateAt        DateTime @updatedAt()
 }
 
+model Book {
+  id               String @id @default(uuid())
+  title            String
+  author           String
+  ISBN             String
+  genre            String
+  price            String
+  quantityAvailble String
+}
