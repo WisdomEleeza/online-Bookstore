@@ -26,6 +26,11 @@ class UserController {
       validationMiddleware(validation.login),
       this.login,
     );
+    this.router.put(
+      "/users/profile/:id",
+      validationMiddleware(validation.userProfile),
+      this.updateProfile,
+    );
   }
 
   private register = async (
@@ -35,12 +40,14 @@ class UserController {
   ): Promise<Response | void> => {
     try {
       const { name, email, password } = req.body;
-      const token = await this.UserServices.register(
-        name,
-        email,
-        password,
-        "user",
-      );
+      const token = await this.UserServices.register(name, email, password);
+
+      // const maxAge = 10;
+
+      // res.cookies("jwt", accessToken, {
+      //   httpOnly: true,
+      //   maxAge: maxAge * 1000,
+      // });
 
       res.status(201).json({
         success: true,
@@ -64,6 +71,35 @@ class UserController {
       res
         .status(200)
         .json({ success: true, message: "Login Successfully", token: token });
+    } catch (error) {
+      if (error instanceof Error) {
+        return next(new HttpException(400, error.message));
+      }
+    }
+  };
+
+  private updateProfile = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<Response | void> => {
+    try {
+      // Extract updated profile information from the request body
+      const { name, shippingAddress, paymentMethod } = req.body;
+
+      // Update the user's profile in the database
+      const { id } = req.params;
+      const updatedUser = await this.UserServices.updateProfile(id, {
+        name,
+        shippingAddress,
+        paymentMethod,
+      });
+
+      return res.status(200).json({
+        success: true,
+        message: "User Profile Updated Successfully",
+        updatedUser,
+      });
     } catch (error) {
       if (error instanceof Error) {
         return next(new HttpException(400, error.message));

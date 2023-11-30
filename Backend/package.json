@@ -4,6 +4,7 @@
   "description": "An API for online-bookstore",
   "main": "index.js",
   "scripts": {
+    "prisma": "npx prisma format",
     "build": "rimraf dist && npx tsc",
     "prestart": "npm run build",
     "start": "node dist/index.js",

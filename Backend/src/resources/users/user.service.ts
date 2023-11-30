@@ -1,6 +1,7 @@
-import { PrismaClient } from "@prisma/client";
-import token from "../../utils/token";
+import { PrismaClient, User } from "@prisma/client";
+import token from "../..//utils/token";
 import bcrypt from "bcrypt";
+import logger from "../..//utils/logger";
 
 class UserServices {
   private prisma: PrismaClient;
@@ -13,7 +14,6 @@ class UserServices {
     name: string,
     email: string,
     password: string,
-    role: string,
   ): Promise<string> {
     try {
       const salt = await bcrypt.genSalt(10);
@@ -24,14 +24,12 @@ class UserServices {
           name: name,
           email: email,
           password: hashedPassword,
-          role: role,
         },
       });
       const accessToken = token.createToken(user);
       return accessToken;
-      // res.cookies('jwt', accessToken, { httpOnly: true, maxAge: maxAge * 1000})
     } catch (error) {
-      console.error("Error during user registration:", error);
+      logger.info("Error during user registration:", error);
       throw new Error("Unable to register user");
     }
   }
@@ -52,9 +50,37 @@ class UserServices {
         throw new Error("Wrong credentials given");
       }
     } catch (error) {
-      console.log(error);
-
+      logger.info(error)
       throw new Error("Unable to log in");
+    }
+  }
+
+  public async updateProfile(
+    userId: string,
+    updateData: {
+      name: string;
+      shippingAddress: string;
+      paymentMethod: string;
+    },
+  ): Promise<User> {
+    try {
+      // Find the user in the database
+      const user = await this.prisma.user.findUnique({
+        where: { id: userId },
+      });
+
+      if (!user) throw new Error("User not found");
+
+      // Update the user's profile
+      const updateUser = await this.prisma.user.update({
+        where: { id: userId },
+        data: { ...updateData },
+      });
+
+      return updateUser;
+    } catch (error) {
+      console.error("Error during profile update:", error);
+      throw new Error("Unable to update profile");
     }
   }
 }
