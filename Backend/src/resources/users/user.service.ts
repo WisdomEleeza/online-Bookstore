@@ -1,6 +1,7 @@
 import { PrismaClient, User } from "@prisma/client";
-import token from "../../utils/token";
+import token from "../..//utils/token";
 import bcrypt from "bcrypt";
+import logger from "../..//utils/logger";
 
 class UserServices {
   private prisma: PrismaClient;
@@ -28,7 +29,7 @@ class UserServices {
       const accessToken = token.createToken(user);
       return accessToken;
     } catch (error) {
-      console.log("Error during user registration:", error);
+      logger.info("Error during user registration:", error);
       throw new Error("Unable to register user");
     }
   }
@@ -49,8 +50,7 @@ class UserServices {
         throw new Error("Wrong credentials given");
       }
     } catch (error) {
-      console.log(error);
-
+      logger.info(error)
       throw new Error("Unable to log in");
     }
   }

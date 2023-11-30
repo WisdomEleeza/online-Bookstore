@@ -35,7 +35,7 @@ class App {
 
   private initialiseController(): void {
     const userController = new UserController();
-    this.express.use("/api", userController.router);
+    this.express.use("/api/v1", userController.router);
   }
 
   private initialiseErrorMiddleware(): void {
