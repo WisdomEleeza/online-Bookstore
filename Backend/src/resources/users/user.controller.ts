@@ -39,8 +39,15 @@ class UserController {
     next: NextFunction,
   ): Promise<Response | void> => {
     try {
-      const { name, email, password } = req.body;
-      const token = await this.UserServices.register(name, email, password);
+      const { name, email, password, shippingAddress, paymentMethod } =
+        req.body;
+      const token = await this.UserServices.register(
+        name,
+        email,
+        password,
+        shippingAddress,
+        paymentMethod,
+      );
 
       // const maxAge = 10;
 

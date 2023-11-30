@@ -14,6 +14,8 @@ class UserServices {
     name: string,
     email: string,
     password: string,
+    shippingAddress: string,
+    paymentMethod: string,
   ): Promise<string> {
     try {
       const salt = await bcrypt.genSalt(10);
@@ -24,6 +26,8 @@ class UserServices {
           name: name,
           email: email,
           password: hashedPassword,
+          shippingAddress,
+          paymentMethod,
         },
       });
       const accessToken = token.createToken(user);
