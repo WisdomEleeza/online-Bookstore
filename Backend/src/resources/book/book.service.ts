@@ -1,6 +1,6 @@
 // import bookValidate from "./book.validate";
 import logger from "@/utils/logger";
-import { PrismaClient } from "@prisma/client";
+import { Book, PrismaClient } from "@prisma/client";
 
 class BookService {
   private prisma: PrismaClient;
@@ -15,8 +15,8 @@ class BookService {
     ISBN: string,
     genre: string,
     price: number,
-    quantityAvailable?: string,
-  ): Promise <string>{
+    quantityAvailable: number,
+  ): Promise<Book> {
     try {
       const book = await this.prisma.book.create({
         data: {

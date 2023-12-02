@@ -15,7 +15,7 @@ model User {
   name            String
   email           String   @unique()
   password        String
-  role String @default("USER")
+  role            String   @default("USER")
   shippingAddress String?
   paymentMethod   String?  @default("")
   createdAt       DateTime @default(now())
@@ -23,13 +23,13 @@ model User {
 }
 
 model Book {
-  id               String @id @default(uuid())
-  title            String
-  author           String
-  ISBN             String
-  genre            String
-  price            Float
-  quantityAvailble Int
+  id                String @id @default(uuid())
+  title             String
+  author            String
+  ISBN              String
+  genre             String
+  price             Float
+  quantityAvailable Int
 }
 
 enum Role {
