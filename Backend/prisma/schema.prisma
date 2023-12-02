@@ -15,6 +15,7 @@ model User {
   name            String
   email           String   @unique()
   password        String
+  role String @default("USER")
   shippingAddress String?
   paymentMethod   String?  @default("")
   createdAt       DateTime @default(now())
@@ -27,6 +28,11 @@ model Book {
   author           String
   ISBN             String
   genre            String
-  price            String
-  quantityAvailble String
+  price            Float
+  quantityAvailble Int
+}
+
+enum Role {
+  USER
+  ADMIN
 }

@@ -9,9 +9,9 @@ const Book = Joi.object({
 
   genre: Joi.string().max(255).required(),
 
-  price: Joi.string().max(255).required(),
+  price: Joi.number().max(255).required(),
 
-  quantityAvailable: Joi.string().max(255).required(),
+  quantityAvailable: Joi.number().max(255).required(),
 });
 
 export default { Book };
