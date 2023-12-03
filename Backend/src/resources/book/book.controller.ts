@@ -3,12 +3,11 @@ import HttpException from "@/utils/http.exception";
 import validationMiddleware from "@/middleware/validation.middleware";
 import validateBook from "@/resources/book/book.validate";
 import BookService from "./book.service";
-// import { PrismaClient } from "@prisma/client";
+import logger from "@/utils/logger";
 
 class BookController {
   private router = Router();
-  private BookService = BookService;
-  //   private prisma = new PrismaClient()
+  private BookService = new BookService();
 
   constructor() {
     this.initialiseRoutes();
@@ -16,8 +15,9 @@ class BookController {
 
   private initialiseRoutes(): void {
     this.router.post(
-      "/books/create-book",
+      "/book/create-book",
       validationMiddleware(validateBook.BookValidation),
+      this.PostBook,
     );
   }
 
@@ -25,7 +25,31 @@ class BookController {
     req: Request,
     res: Response,
     next: NextFunction,
-  ): Promise<Response | void> => {};
+  ): Promise<Response | void> => {
+    try {
+      const { title, author, ISBN, genre, price, quantityAvailable } = req.body;
+
+      const bookCreation = await this.BookService.CreateBook(
+        title,
+        author,
+        ISBN,
+        genre,
+        price,
+        quantityAvailable,
+      );
+
+      res.status(201).json({
+        success: true,
+        message: "Book Created Successfully",
+        bookCreation,
+      });
+    } catch (error) {
+      if (error instanceof Error) {
+        logger.info("Error Occurred During Book Creation");
+        return next(new HttpException(400, error.message));
+      }
+    }
+  };
 }
 
 export default BookController;
