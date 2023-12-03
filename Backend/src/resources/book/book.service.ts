@@ -1,5 +1,5 @@
 // import bookValidate from "./book.validate";
-import logger from "@/utils/logger";
+import logger from "../../utils/logger";
 import { Book, PrismaClient } from "@prisma/client";
 
 class BookService {

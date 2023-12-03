@@ -1,12 +1,12 @@
 import { Request, Response, NextFunction, Router } from "express";
-import HttpException from "@/utils/http.exception";
-import validationMiddleware from "@/middleware/validation.middleware";
-import validateBook from "@/resources/book/book.validate";
+import HttpException from "../../utils/http.exception";
+import validationMiddleware from "../../middleware/validation.middleware";
+import validateBook from "../../resources/book/book.validate";
 import BookService from "./book.service";
-import logger from "@/utils/logger";
+import logger from "../../utils/logger";
 
 class BookController {
-  private router = Router();
+  public router = Router();
   private BookService = new BookService();
 
   constructor() {

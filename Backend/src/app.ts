@@ -7,6 +7,7 @@ import { PrismaClient } from "@prisma/client";
 import logger from "./utils/logger";
 import errorMiddleware from "./middleware/error.middleware";
 import UserController from "./resources/users/user.controller";
+import BookController from "./resources/book/book.controller";
 
 class App {
   public express: Application;
@@ -35,7 +36,9 @@ class App {
 
   private initialiseController(): void {
     const userController = new UserController();
+    const bookController = new BookController();
     this.express.use("/api/v1", userController.router);
+    this.express.use("/api/v1", bookController.router);
   }
 
   private initialiseErrorMiddleware(): void {
