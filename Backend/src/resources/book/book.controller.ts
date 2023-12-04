@@ -50,6 +50,16 @@ class BookController {
       }
     }
   };
+
+  public updateBook = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<Response | void> => {
+    const {title, author, ISBN, genre, price, quantityAvailable} = req.body
+
+    const bookUpdate = await this.
+  };
 }
 
 export default BookController;
