@@ -34,6 +34,15 @@ class BookService {
       throw new Error("Unable to create book");
     }
   }
+
+  public async updateBook(
+    title: string,
+    author: string,
+    ISBN: string,
+    genre: string,
+    price: number,
+    quantityAvailable: number,
+  ): Promise<Book> {}
 }
 
 export default BookService;

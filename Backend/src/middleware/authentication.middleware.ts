@@ -33,8 +33,6 @@ async function authenticatedMiddleware(
 
       if (!user) return next(new HttpException(401, "Unauthorized"));
 
-      // req.user = user;
-
       return next();
     } else {
       return next(new HttpException(401, "Unauthorized"));
