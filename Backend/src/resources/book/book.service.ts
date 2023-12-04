@@ -36,13 +36,33 @@ class BookService {
   }
 
   public async updateBook(
+    bookId: string,
     title: string,
     author: string,
     ISBN: string,
     genre: string,
     price: number,
     quantityAvailable: number,
-  ): Promise<Book> {}
+  ): Promise<Book> {
+    const book = await this.prisma.user.findUnique({ where: { id: bookId } });
+
+    if (!book) throw new Error("Book Not Found");
+
+    const bookUpdate = await this.prisma.book.update({
+      where: {
+        id: bookId,
+      },
+      data: {
+        title,
+        author,
+        ISBN,
+        genre,
+        price,
+        quantityAvailable,
+      },
+    });
+    return bookUpdate
+  }
 }
 
 export default BookService;
