@@ -37,14 +37,16 @@ class BookService {
 
   public async updateBook(
     bookId: string,
-    title: string,
-    author: string,
-    ISBN: string,
-    genre: string,
-    price: number,
-    quantityAvailable: number,
+    updateData: {
+      title: string;
+      author: string;
+      ISBN: string;
+      genre: string;
+      price: number;
+      quantityAvailable: number;
+    },
   ): Promise<Book> {
-    const book = await this.prisma.user.findUnique({ where: { id: bookId } });
+    const book = await this.prisma.book.findUnique({ where: { id: bookId } });
 
     if (!book) throw new Error("Book Not Found");
 
@@ -53,15 +55,10 @@ class BookService {
         id: bookId,
       },
       data: {
-        title,
-        author,
-        ISBN,
-        genre,
-        price,
-        quantityAvailable,
+        ...updateData
       },
     });
-    return bookUpdate
+    return bookUpdate;
   }
 }
 

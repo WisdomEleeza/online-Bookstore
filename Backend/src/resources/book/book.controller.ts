@@ -20,9 +20,11 @@ class BookController {
       this.PostBook,
     );
 
-    this.router.put("/book/update-book");
-    validationMiddleware(validateBook.BookValidation)
-    this.UpdateBook
+    this.router.put(
+      "/book/update-book/:id",
+      validationMiddleware(validateBook.BookValidation),
+      this.UpdateBook,
+    );
   }
 
   private PostBook = async (
@@ -61,18 +63,17 @@ class BookController {
     next: NextFunction,
   ): Promise<Response | void> => {
     try {
-      const { bookId, title, author, ISBN, genre, price, quantityAvailable } =
-        req.body;
+      const { id } = req.params;
+      const { title, author, ISBN, genre, price, quantityAvailable } = req.body;
 
-      const bookUpdating = await this.BookService.updateBook(
-        bookId,
+      const bookUpdating = await this.BookService.updateBook(id, {
         title,
         author,
         ISBN,
         genre,
         price,
         quantityAvailable,
-      );
+      });
 
       res.status(201).json({
         success: true,
