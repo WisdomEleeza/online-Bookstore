@@ -19,6 +19,10 @@ class BookController {
       validationMiddleware(validateBook.BookValidation),
       this.PostBook,
     );
+
+    this.router.put("/book/update-book");
+    validationMiddleware(validateBook.BookValidation)
+    this.UpdateBook
   }
 
   private PostBook = async (
@@ -51,14 +55,36 @@ class BookController {
     }
   };
 
-  public updateBook = async (
+  public UpdateBook = async (
     req: Request,
     res: Response,
     next: NextFunction,
   ): Promise<Response | void> => {
-    const {title, author, ISBN, genre, price, quantityAvailable} = req.body
+    try {
+      const { bookId, title, author, ISBN, genre, price, quantityAvailable } =
+        req.body;
 
-    const bookUpdate = await this.
+      const bookUpdating = await this.BookService.updateBook(
+        bookId,
+        title,
+        author,
+        ISBN,
+        genre,
+        price,
+        quantityAvailable,
+      );
+
+      res.status(201).json({
+        success: true,
+        message: "Book Updated Successfully",
+        bookUpdating,
+      });
+    } catch (error) {
+      if (error instanceof Error) {
+        logger.info("Error Occurred During Book Update", error);
+        return next(new HttpException(400, error.message));
+      }
+    }
   };
 }
 
