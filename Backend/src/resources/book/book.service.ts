@@ -66,15 +66,16 @@ class BookService {
     }
   }
 
-  public async deleteBook(bookId: string): Promise<void> {
+  public async deleteBook(bookId: string): Promise<Book | void> {
     try {
       const book = await this.prisma.book.findUnique({ where: { id: bookId } });
 
       if (!book) throw new Error("Book Not Found");
 
-      await this.prisma.book.delete({
+      const BookDelete = await this.prisma.book.delete({
         where: { id: bookId },
       });
+      return BookDelete;
     } catch (error) {
       logger.info("Error Deleting Book", error);
       throw new Error("Unable to Delete Book");

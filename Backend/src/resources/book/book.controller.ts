@@ -25,8 +25,11 @@ class BookController {
       validationMiddleware(validateBook.BookValidation),
       this.UpdateBook,
     );
-
-    this.router.delete("/book/delete-book/:id", this.DeleteBook);
+    this.router.delete(
+      "/book/delete-book/:id",
+      // validationMiddleware(validateBook.BookValidation),
+      this.UpdateBook,
+    );
   }
 
   private PostBook = async (
