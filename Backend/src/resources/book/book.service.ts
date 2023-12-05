@@ -1,5 +1,4 @@
 // import bookValidate from "./book.validate";
-import HttpException from "@/utils/http.exception";
 import logger from "../../utils/logger";
 import { Book, PrismaClient } from "@prisma/client";
 
@@ -73,11 +72,9 @@ class BookService {
 
       if (!book) throw new Error("Book Not Found");
 
-      const BookDelete = await this.prisma.book.delete({
+      await this.prisma.book.delete({
         where: { id: bookId },
       });
-
-      return BookDelete;
     } catch (error) {
       logger.info("Error Deleting Book", error);
       throw new Error("Unable to Delete Book");

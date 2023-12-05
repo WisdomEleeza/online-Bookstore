@@ -25,6 +25,8 @@ class BookController {
       validationMiddleware(validateBook.BookValidation),
       this.UpdateBook,
     );
+
+    this.router.delete("/book/delete-book/:id", this.DeleteBook);
   }
 
   private PostBook = async (
@@ -84,6 +86,26 @@ class BookController {
       if (error instanceof Error) {
         logger.info("Error Occurred During Book Update", error);
         return next(new HttpException(400, error.message));
+      }
+    }
+  };
+
+  public DeleteBook = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<Response | void> => {
+    try {
+      const { id } = req.params;
+      const book = await this.BookService.deleteBook(id);
+
+      res
+        .status(200)
+        .json({ success: true, message: "Book Deleted Successfully", book });
+    } catch (error) {
+      if (error instanceof Error) {
+        logger.info("Error Deleting Book", error);
+        return next(new HttpException(500, error.message));
       }
     }
   };
