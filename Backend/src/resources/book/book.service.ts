@@ -1,4 +1,5 @@
 // import bookValidate from "./book.validate";
+import HttpException from "@/utils/http.exception";
 import logger from "../../utils/logger";
 import { Book, PrismaClient } from "@prisma/client";
 
@@ -46,19 +47,41 @@ class BookService {
       quantityAvailable: number;
     },
   ): Promise<Book> {
-    const book = await this.prisma.book.findUnique({ where: { id: bookId } });
+    try {
+      const book = await this.prisma.book.findUnique({ where: { id: bookId } });
 
-    if (!book) throw new Error("Book Not Found");
+      if (!book) throw new Error("Book Not Found");
 
-    const bookUpdate = await this.prisma.book.update({
-      where: {
-        id: bookId,
-      },
-      data: {
-        ...updateData
-      },
-    });
-    return bookUpdate;
+      const bookUpdate = await this.prisma.book.update({
+        where: {
+          id: bookId,
+        },
+        data: {
+          ...updateData,
+        },
+      });
+      return bookUpdate;
+    } catch (error) {
+      logger.info("Error Updating Book", error);
+      throw new Error("Error Occurred During Book Updating");
+    }
+  }
+
+  public async deleteBook(bookId: string): Promise<void> {
+    try {
+      const book = await this.prisma.book.findUnique({ where: { id: bookId } });
+
+      if (!book) throw new Error("Book Not Found");
+
+      const BookDelete = await this.prisma.book.delete({
+        where: { id: bookId },
+      });
+
+      return BookDelete;
+    } catch (error) {
+      logger.info("Error Deleting Book", error);
+      throw new Error("Unable to Delete Book");
+    }
   }
 }
 

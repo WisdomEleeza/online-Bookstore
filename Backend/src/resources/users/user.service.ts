@@ -54,7 +54,7 @@ class UserServices {
         throw new Error("Wrong credentials given");
       }
     } catch (error) {
-      logger.info(error)
+      logger.info(error);
       throw new Error("Unable to log in");
     }
   }
