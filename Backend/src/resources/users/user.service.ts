@@ -83,8 +83,6 @@ class UserServices {
         data: { ...updateData },
       });
 
-      console.log("Profile updated successfully");
-
       return updateUser;
     } catch (error) {
       console.error("Error during profile update:", error);
