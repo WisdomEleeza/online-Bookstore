@@ -10,7 +10,6 @@ async function authenticatedMiddleware(
   res: Response,
   next: NextFunction,
 ): Promise<Response | void> {
-  // console.log("Starting authenticatedMiddleware");
   const bearer = req.headers.authorization;
 
   if (!bearer || !bearer.startsWith("Bearer ")) {
