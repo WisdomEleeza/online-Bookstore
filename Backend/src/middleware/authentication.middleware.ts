@@ -19,9 +19,7 @@ async function authenticatedMiddleware(
   const accessToken = bearer.split("Bearer ")[1].trim();
 
   try {
-    // console.log("Verifying token");
     const payload = token.verifyToken(accessToken);
-    // console.log("payload", payload);
 
     if (payload instanceof JsonWebTokenError) {
       // console.log("Unauthorized: Token verification failed");
