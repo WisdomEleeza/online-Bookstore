@@ -6,6 +6,7 @@ import validationMiddleware from "../../middleware/validation.middleware";
 // import validation from "@/resources/users/user.validate";
 import validation from "../../resources/users/user.validate";
 import UserServices from "./user.service";
+import authenticatedMiddleware from "../../middleware/authentication.middleware";
 
 class UserController {
   public router = Router();
@@ -29,6 +30,7 @@ class UserController {
     this.router.put(
       "/users/profile/:id",
       validationMiddleware(validation.userProfile),
+      authenticatedMiddleware,
       this.updateProfile,
     );
   }
@@ -39,8 +41,15 @@ class UserController {
     next: NextFunction,
   ): Promise<Response | void> => {
     try {
-      const { name, email, password } = req.body;
-      const token = await this.UserServices.register(name, email, password);
+      const { name, email, password, shippingAddress, paymentMethod } =
+        req.body;
+      const token = await this.UserServices.register(
+        name,
+        email,
+        password,
+        shippingAddress,
+        paymentMethod,
+      );
 
       // const maxAge = 10;
 

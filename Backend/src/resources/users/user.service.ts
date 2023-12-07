@@ -14,6 +14,8 @@ class UserServices {
     name: string,
     email: string,
     password: string,
+    shippingAddress: string,
+    paymentMethod: string,
   ): Promise<string> {
     try {
       const salt = await bcrypt.genSalt(10);
@@ -24,6 +26,8 @@ class UserServices {
           name: name,
           email: email,
           password: hashedPassword,
+          shippingAddress,
+          paymentMethod,
         },
       });
       const accessToken = token.createToken(user);
@@ -50,7 +54,7 @@ class UserServices {
         throw new Error("Wrong credentials given");
       }
     } catch (error) {
-      logger.info(error)
+      logger.info(error);
       throw new Error("Unable to log in");
     }
   }
@@ -79,7 +83,7 @@ class UserServices {
 
       return updateUser;
     } catch (error) {
-      console.error("Error during profile update:", error);
+      logger.info("Profile Update Error", error);
       throw new Error("Unable to update profile");
     }
   }

@@ -15,9 +15,24 @@ model User {
   name            String
   email           String   @unique()
   password        String
+  role            String   @default("USER")
   shippingAddress String?
-  paymentMethod   String?   @default("")
+  paymentMethod   String?  @default("")
   createdAt       DateTime @default(now())
-  updateAt        DateTime @updatedAt()
+  updatedAt        DateTime @updatedAt()
 }
 
+model Book {
+  id                String @id @default(uuid())
+  title             String
+  author            String
+  ISBN              String
+  genre             String
+  price             Float
+  quantityAvailable Int
+}
+
+enum Role {
+  USER
+  ADMIN
+}
