@@ -25,11 +25,8 @@ class BookController {
       validationMiddleware(validateBook.BookValidation),
       this.UpdateBook,
     );
-    this.router.delete(
-      "/book/delete-book/:id",
-      // validationMiddleware(validateBook.BookValidation),
-      this.UpdateBook,
-    );
+
+    this.router.delete("/book/delete-book/:id", this.DeleteBook);
   }
 
   private PostBook = async (
@@ -69,6 +66,7 @@ class BookController {
   ): Promise<Response | void> => {
     try {
       const { id } = req.params;
+      console.log(req.params);
       const { title, author, ISBN, genre, price, quantityAvailable } = req.body;
 
       const bookUpdating = await this.BookService.updateBook(id, {
@@ -107,6 +105,7 @@ class BookController {
         .json({ success: true, message: "Book Deleted Successfully", book });
     } catch (error) {
       if (error instanceof Error) {
+        console.error("Error occurred:", error);
         logger.info("Error Deleting Book", error);
         return next(new HttpException(500, error.message));
       }

@@ -73,6 +73,8 @@ class UserServices {
         where: { id: userId },
       });
 
+      console.log("User found for update:", user);
+
       if (!user) throw new Error("User not found");
 
       // Update the user's profile
@@ -80,6 +82,8 @@ class UserServices {
         where: { id: userId },
         data: { ...updateData },
       });
+
+      console.log("Profile updated successfully");
 
       return updateUser;
     } catch (error) {

@@ -66,7 +66,7 @@ class BookService {
     }
   }
 
-  public async deleteBook(bookId: string): Promise<Book | void> {
+  public async  deleteBook(bookId: string): Promise<Book | void> {
     try {
       const book = await this.prisma.book.findUnique({ where: { id: bookId } });
 

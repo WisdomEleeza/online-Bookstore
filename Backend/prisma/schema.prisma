@@ -19,7 +19,7 @@ model User {
   shippingAddress String?
   paymentMethod   String?  @default("")
   createdAt       DateTime @default(now())
-  updateAt        DateTime @updatedAt()
+  updatedAt        DateTime @updatedAt()
 }
 
 model Book {
