@@ -13,7 +13,6 @@ async function authenticatedMiddleware(
   const bearer = req.headers.authorization;
 
   if (!bearer || !bearer.startsWith("Bearer ")) {
-    // console.log("Unauthorized: No Bearer token")
     return next(new HttpException(401, "Unauthorized"));
   }
 
