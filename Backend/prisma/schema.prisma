@@ -15,11 +15,12 @@ model User {
   name            String
   email           String   @unique()
   password        String
-  role            String   @default("USER")
+  role            Role   @default(USER)
+  books           Book[]
   shippingAddress String?
   paymentMethod   String?  @default("")
   createdAt       DateTime @default(now())
-  updatedAt        DateTime @updatedAt()
+  updatedAt       DateTime @updatedAt()
 }
 
 model Book {
@@ -30,6 +31,8 @@ model Book {
   genre             String
   price             Float
   quantityAvailable Int
+  userId            String
+  user              User   @relation(fields: [userId], references: [id])
 }
 
 enum Role {

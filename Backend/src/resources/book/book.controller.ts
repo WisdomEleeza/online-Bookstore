@@ -4,6 +4,7 @@ import validationMiddleware from "../../middleware/validation.middleware";
 import validateBook from "../../resources/book/book.validate";
 import BookService from "./book.service";
 import logger from "../../utils/logger";
+import authenticatedMiddleware from "../../middleware/authentication.middleware";
 
 class BookController {
   public router = Router();
@@ -15,18 +16,24 @@ class BookController {
 
   private initialiseRoutes(): void {
     this.router.post(
-      "/book/create-book",
+      "/book/create-book/:id",
       validationMiddleware(validateBook.BookValidation),
+      authenticatedMiddleware,
       this.PostBook,
     );
 
     this.router.put(
       "/book/update-book/:id",
       validationMiddleware(validateBook.BookValidation),
+      authenticatedMiddleware,
       this.UpdateBook,
     );
 
-    this.router.delete("/book/delete-book/:id", this.DeleteBook);
+    this.router.delete(
+      "/book/delete-book/:id",
+      authenticatedMiddleware,
+      this.DeleteBook,
+    );
   }
 
   private PostBook = async (
@@ -35,9 +42,12 @@ class BookController {
     next: NextFunction,
   ): Promise<Response | void> => {
     try {
+      const { userId } = req.params;
+
       const { title, author, ISBN, genre, price, quantityAvailable } = req.body;
 
       const bookCreation = await this.BookService.CreateBook(
+        userId,
         title,
         author,
         ISBN,

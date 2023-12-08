@@ -1,6 +1,6 @@
 // import bookValidate from "./book.validate";
 import logger from "../../utils/logger";
-import { Book, PrismaClient } from "@prisma/client";
+import { Book, PrismaClient, } from "@prisma/client";
 
 class BookService {
   private prisma: PrismaClient;
@@ -18,6 +18,13 @@ class BookService {
     quantityAvailable: number,
   ): Promise<Book> {
     try {
+      const findUser = await this.prisma.user.findUnique({
+        where: { id: user.id },
+      });
+
+      if (!findUser)
+        throw new Error("Not Authorized: Create Account to Create Book");
+
       const book = await this.prisma.book.create({
         data: {
           title,
@@ -66,7 +73,7 @@ class BookService {
     }
   }
 
-  public async  deleteBook(bookId: string): Promise<Book | void> {
+  public async deleteBook(bookId: string): Promise<Book | void> {
     try {
       const book = await this.prisma.book.findUnique({ where: { id: bookId } });
 
