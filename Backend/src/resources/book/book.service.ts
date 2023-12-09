@@ -19,6 +19,7 @@ class BookService {
     quantityAvailable: number,
   ): Promise<Book> {
     try {
+      //API to Post/Create Book
       const book = await this.prisma.book.create({
         data: {
           user: { connect: { id: userId } },
@@ -37,6 +38,7 @@ class BookService {
     }
   }
 
+  //API to Update Book
   public async updateBook(
     bookId: string,
     updateData: {
@@ -68,6 +70,7 @@ class BookService {
     }
   }
 
+  //API to Delete Book
   public async deleteBook(bookId: string): Promise<Book | void> {
     try {
       const book = await this.prisma.book.findUnique({ where: { id: bookId } });
@@ -83,6 +86,8 @@ class BookService {
       throw new Error("Unable to Delete Book");
     }
   }
+
+  // Create API endpoints for listing books, viewing book details, searching, and filtering.
 }
 
 export default BookService;
