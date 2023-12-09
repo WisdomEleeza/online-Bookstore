@@ -75,7 +75,7 @@ class UserServices {
     try {
       // Find the user in the database
       const user = await this.prisma.user.findUnique({
-        where: { id: userId },
+        where: { id: String(userId) },
       });
 
       if (!user) throw new Error("User not found");
