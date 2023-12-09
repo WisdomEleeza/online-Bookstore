@@ -42,6 +42,7 @@ class BookController {
     next: NextFunction,
   ): Promise<Response | void> => {
     try {
+      //API Routes to Post/Create Book
       const { id } = req.params;
       const { title, author, ISBN, genre, price, quantityAvailable } = req.body;
 
@@ -69,6 +70,7 @@ class BookController {
     }
   };
 
+  //API Routes to Update Book
   public UpdateBook = async (
     req: Request,
     res: Response,
@@ -103,6 +105,7 @@ class BookController {
     }
   };
 
+  //API Routes to Delete Book
   public DeleteBook = async (
     req: Request,
     res: Response,

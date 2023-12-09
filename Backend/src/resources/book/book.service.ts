@@ -1,4 +1,3 @@
-// import bookValidate from "./book.validate";
 import logger from "../../utils/logger";
 import { Book, PrismaClient } from "@prisma/client";
 
@@ -19,7 +18,7 @@ class BookService {
     quantityAvailable: number,
   ): Promise<Book> {
     try {
-      //API to Post/Create Book
+      //Method for API Business Logic to Post/Create Book
       const book = await this.prisma.book.create({
         data: {
           user: { connect: { id: userId } },
@@ -38,7 +37,7 @@ class BookService {
     }
   }
 
-  //API to Update Book
+  //Method for API Business Logic to Update Book
   public async updateBook(
     bookId: string,
     updateData: {
@@ -70,7 +69,7 @@ class BookService {
     }
   }
 
-  //API to Delete Book
+  //Method for API Business Logic to Delete Book
   public async deleteBook(bookId: string): Promise<Book | void> {
     try {
       const book = await this.prisma.book.findUnique({ where: { id: bookId } });
