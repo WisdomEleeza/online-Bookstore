@@ -51,18 +51,24 @@ class UserController {
         paymentMethod,
       );
 
+      if (token) {
+        res.status(201).json({
+          success: true,
+          message: "User Registered Successfully",
+          token: token,
+        });
+      } else {
+        return res
+          .status(400)
+          .json({ success: false, message: "User already exist" });
+      }
+
       // const maxAge = 10;
 
-      // res.cookies("jwt", accessToken, {
+      // res.cookies("jwt", token, {
       //   httpOnly: true,
       //   maxAge: maxAge * 1000,
       // });
-
-      res.status(201).json({
-        success: true,
-        message: "User Registered Successfully",
-        token: token,
-      });
     } catch (error) {
       if (error instanceof Error)
         return next(new HttpException(400, error.message));

@@ -42,12 +42,11 @@ class BookController {
     next: NextFunction,
   ): Promise<Response | void> => {
     try {
-      const { userId } = req.params;
-
+      const { id } = req.params;
       const { title, author, ISBN, genre, price, quantityAvailable } = req.body;
 
       const bookCreation = await this.BookService.CreateBook(
-        userId,
+        id,
         title,
         author,
         ISBN,
@@ -63,6 +62,7 @@ class BookController {
       });
     } catch (error) {
       if (error instanceof Error) {
+        console.error("Checking Error", error);
         logger.info("Error Occurred During Book Creation");
         return next(new HttpException(400, error.message));
       }
@@ -76,7 +76,7 @@ class BookController {
   ): Promise<Response | void> => {
     try {
       const { id } = req.params;
-      console.log(req.params);
+      // console.log("Requesst Parameter::", req.params);
       const { title, author, ISBN, genre, price, quantityAvailable } = req.body;
 
       const bookUpdating = await this.BookService.updateBook(id, {
@@ -95,6 +95,9 @@ class BookController {
       });
     } catch (error) {
       if (error instanceof Error) {
+        res
+          .status(500)
+          .json({ success: false, message: "Internal Server Error" });
         logger.info("Error Occurred During Book Update", error);
         return next(new HttpException(400, error.message));
       }
