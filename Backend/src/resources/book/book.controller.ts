@@ -76,7 +76,6 @@ class BookController {
   ): Promise<Response | void> => {
     try {
       const { id } = req.params;
-      // console.log("Requesst Parameter::", req.params);
       const { title, author, ISBN, genre, price, quantityAvailable } = req.body;
 
       const bookUpdating = await this.BookService.updateBook(id, {
@@ -118,6 +117,9 @@ class BookController {
         .json({ success: true, message: "Book Deleted Successfully", book });
     } catch (error) {
       if (error instanceof Error) {
+        res
+          .status(500)
+          .json({ success: false, message: "Internal Server Error" });
         console.error("Error occurred:", error);
         logger.info("Error Deleting Book", error);
         return next(new HttpException(500, error.message));
