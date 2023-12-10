@@ -34,6 +34,8 @@ class BookController {
       authenticatedMiddleware,
       this.DeleteBook,
     );
+
+    this.router.get("/book/list-book", this.ListBooks);
   }
 
   private PostBook = async (
@@ -127,6 +129,28 @@ class BookController {
         logger.info("Error Deleting Book", error);
         return next(new HttpException(500, error.message));
       }
+    }
+  };
+
+  public ListBooks = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<Response | void> => {
+    try {
+      const listBooks = await this.BookService.ListBooks();
+      res.status(200).json({
+        success: true,
+        message: "Successfully Listed Books",
+        listBooks,
+      });
+    } catch (error) {
+      res
+        .status(500)
+        .json({ success: false, message: "Internal Server Error" });
+      logger.info("Error Listing Books");
+      if (error instanceof Error)
+        return next(new HttpException(500, error.message));
     }
   };
 }
