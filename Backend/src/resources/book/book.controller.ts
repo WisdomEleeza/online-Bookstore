@@ -138,7 +138,10 @@ class BookController {
     next: NextFunction,
   ): Promise<Response | void> => {
     try {
-      const listBooks = await this.BookService.ListBooks();
+      const skip = parseInt(req.query.skip as string) || 0;
+      const take = parseInt(req.query.take as string) || 5;
+
+      const listBooks = await this.BookService.ListBooks(skip, take);
       res.status(200).json({
         success: true,
         message: "Successfully Listed Books",
