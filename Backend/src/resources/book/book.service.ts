@@ -86,15 +86,29 @@ class BookService {
     }
   }
   // Create API endpoints for listing books, viewing book details, searching, and filtering.
-  
-  //Method for API Business Logic to List Books
-  public async ListBooks(): Promise<Book[] | void> {
-    try {
-      const listBooks = await this.prisma.book.findMany({});
 
-      return listBooks;
+  //Method for API Business Logic to List Books
+  public async ListBooks(
+    page: number,
+    pageSize: number,
+  ): Promise<{ books: Book[]; hasMore: boolean } | void> {
+    try {
+      // Ensure that page is always greater than or equal to 1
+      const safePage = Math.max(1, page);
+      const skip = (safePage - 1) * pageSize;
+      const take = pageSize + 1; // Fetch one extra record to check if there are more
+
+      const listBooks = await this.prisma.book.findMany({ skip, take });
+
+      const hasMore = listBooks.length > pageSize;
+
+      // If there's one extra record, remove it from the result set
+      if (hasMore) listBooks.pop();
+
+      return { books: listBooks, hasMore };
     } catch (error) {
       logger.info("Error Occurred During Book Listing");
+      console.log("Error::::", error);
       if (error instanceof Error) throw new Error("Error Listing Books");
     }
   }
