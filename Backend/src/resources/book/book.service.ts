@@ -85,8 +85,19 @@ class BookService {
       throw new Error("Unable to Delete Book");
     }
   }
-
   // Create API endpoints for listing books, viewing book details, searching, and filtering.
+  
+  //Method for API Business Logic to List Books
+  public async ListBooks(): Promise<Book[] | void> {
+    try {
+      const listBooks = await this.prisma.book.findMany({});
+
+      return listBooks;
+    } catch (error) {
+      logger.info("Error Occurred During Book Listing");
+      if (error instanceof Error) throw new Error("Error Listing Books");
+    }
+  }
 }
 
 export default BookService;
