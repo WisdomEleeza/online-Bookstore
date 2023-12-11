@@ -24,7 +24,7 @@ class BookController {
       this.PostBook,
     );
 
-    this.router.put(
+    this.router.patch(
       "/book/update-book/:id",
       validationMiddleware(validateBook.BookValidation),
       authenticatedMiddleware,
@@ -69,7 +69,6 @@ class BookController {
       });
     } catch (error) {
       if (error instanceof Error) {
-        console.error("Checking Error", error);
         logger.info("Error Occurred During Book Creation");
         return next(new HttpException(400, error.message));
       }

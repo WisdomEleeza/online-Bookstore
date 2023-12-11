@@ -18,6 +18,12 @@ class BookService {
     quantityAvailable: number,
   ): Promise<Book> {
     try {
+      const bookExists = await this.prisma.book.findFirst({
+        where: { title: title },
+      });
+
+      if (bookExists) throw new Error("Book already Exist");
+
       //Method for API Business Logic to Post/Create Book
       const book = await this.prisma.book.create({
         data: {

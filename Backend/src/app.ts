@@ -1,3 +1,4 @@
+// app.ts
 import express, { Application, urlencoded } from "express";
 import compression from "compression";
 import cors from "cors";
@@ -27,35 +28,38 @@ class App {
   }
 
   private initialiseMiddleware(): void {
+    // Set up middleware
     this.express.use(helmet());
     this.express.use(compression());
     this.express.use(cors());
     this.express.use(morgan("dev"));
     this.express.use(express.json());
     this.express.use(urlencoded({ extended: true }));
-    this.express.use(new UserController().router);
   }
 
   private initialiseController(): void {
-    // instantiate BookService
+    // Instantiate BookService
     const bookService = new BookService();
-    //Inject BookService into the BookController
-    const BookControllers = new BookController(bookService);
-    //Base Routes
-    this.express.use("/api/v1", BookControllers.router);
+    // Inject BookService into the BookController
+    const bookController = new BookController(bookService);
+    // Add Routes from Controllers
+    this.express.use("/api/v1", bookController.router);
 
-    // instantiate UserService
-    const userController = new UserServices();
-    //Inject UserService into the UserController
-    const userController = new UserController(userController);
+    // Instantiate UserService
+    const userServices = new UserServices();
+    // Inject UserService into the UserController
+    const userController = new UserController(userServices);
+    // Add Routes from Controllers
     this.express.use("/api/v1", userController.router);
   }
 
   private initialiseErrorMiddleware(): void {
+    // Set up error middleware
     this.express.use(errorMiddleware);
   }
 
   private initialiseDatabase(): void {
+    // Set up database connection
     const { POSTGRES_USER, POSTGRES_PASSWORD, POSTGRES_PATH } = process.env;
 
     // Use these variables for PostgreSQL connection
@@ -69,6 +73,7 @@ class App {
   }
 
   public listen(): void {
+    // Connect to the database and start listening for requests
     this.prisma.$connect();
     this.express.listen(this.port, () => {
       logger.info(`App is listening on port ${this.port}`);
