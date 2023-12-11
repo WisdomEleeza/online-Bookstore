@@ -8,9 +8,11 @@ import authenticatedMiddleware from "../../middleware/authentication.middleware"
 
 class BookController {
   public router = Router();
-  private BookService = new BookService();
+  private bookService: BookService; // Dependency Injection: Injecting BookService dependency
 
-  constructor() {
+  // Dependency Injection: Passing BookService instance through constructor
+  constructor(bookService: BookService) {
+    this.bookService = bookService;
     this.initialiseRoutes();
   }
 
@@ -49,7 +51,8 @@ class BookController {
       const { id } = req.params;
       const { title, author, ISBN, genre, price, quantityAvailable } = req.body;
 
-      const bookCreation = await this.BookService.CreateBook(
+      const bookCreation = await this.bookService.CreateBook(
+        // Using injected bookService
         id,
         title,
         author,
@@ -83,7 +86,8 @@ class BookController {
       const { id } = req.params;
       const { title, author, ISBN, genre, price, quantityAvailable } = req.body;
 
-      const bookUpdating = await this.BookService.updateBook(id, {
+      const bookUpdating = await this.bookService.updateBook(id, {
+        // Using injected bookService
         title,
         author,
         ISBN,
@@ -116,7 +120,7 @@ class BookController {
   ): Promise<Response | void> => {
     try {
       const { id } = req.params;
-      const book = await this.BookService.deleteBook(id);
+      const book = await this.bookService.deleteBook(id); // Using injected bookService
 
       res
         .status(200)
@@ -132,6 +136,7 @@ class BookController {
       }
     }
   };
+
   //API Routes to List Book with Pagination
   public ListBooks = async (
     req: Request,
@@ -142,7 +147,7 @@ class BookController {
       const skip = parseInt(req.query.skip as string) || 0;
       const take = parseInt(req.query.take as string) || 5;
 
-      const listBooks = await this.BookService.ListBooks(skip, take);
+      const listBooks = await this.bookService.ListBooks(skip, take); // Using injected bookService
       res.status(200).json({
         success: true,
         message: "Successfully Listed Books",
@@ -166,7 +171,7 @@ class BookController {
   ): Promise<Response | void> => {
     try {
       const { id } = req.params;
-      const viewBookDetails = await this.BookService.viewBookDetails(id);
+      const viewBookDetails = await this.bookService.viewBookDetails(id); // Using injected bookService
 
       if (viewBookDetails) {
         res
