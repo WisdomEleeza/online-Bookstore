@@ -8,6 +8,8 @@ import logger from "./utils/logger";
 import errorMiddleware from "./middleware/error.middleware";
 import UserController from "./resources/users/user.controller";
 import BookController from "./resources/book/book.controller";
+import BookService from "./resources/book/book.service";
+import UserServices from "./resources/users/user.service";
 
 class App {
   public express: Application;
@@ -35,10 +37,18 @@ class App {
   }
 
   private initialiseController(): void {
-    const userController = new UserController();
-    const bookController = new BookController();
+    // instantiate BookService
+    const bookService = new BookService();
+    //Inject BookService into the BookController
+    const BookControllers = new BookController(bookService);
+    //Base Routes
+    this.express.use("/api/v1", BookControllers.router);
+
+    // instantiate UserService
+    const userController = new UserServices();
+    //Inject UserService into the UserController
+    const userController = new UserController(userController);
     this.express.use("/api/v1", userController.router);
-    this.express.use("/api/v1", bookController.router);
   }
 
   private initialiseErrorMiddleware(): void {
