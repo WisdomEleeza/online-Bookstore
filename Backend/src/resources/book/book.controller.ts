@@ -36,6 +36,7 @@ class BookController {
     );
 
     this.router.get("/book/list-book", this.ListBooks);
+    this.router.get("/book/view-book-details/:id", this.viewBookDetails);
   }
 
   private PostBook = async (
@@ -125,13 +126,13 @@ class BookController {
         res
           .status(500)
           .json({ success: false, message: "Internal Server Error" });
-        console.error("Error occurred:", error);
+
         logger.info("Error Deleting Book", error);
         return next(new HttpException(500, error.message));
       }
     }
   };
-
+  //API Routes to List Book with Pagination
   public ListBooks = async (
     req: Request,
     res: Response,
@@ -154,6 +155,31 @@ class BookController {
       logger.info("Error Listing Books");
       if (error instanceof Error)
         return next(new HttpException(500, error.message));
+    }
+  };
+
+  //Method for API Routes to View Books Details
+  public viewBookDetails = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<Response | void> => {
+    try {
+      const { id } = req.params;
+      const viewBookDetails = await this.BookService.viewBookDetails(id);
+
+      if (viewBookDetails) {
+        res
+          .status(200)
+          .json({ success: true, message: "Success", viewBookDetails });
+      } else {
+        res.status(404).json({ success: false, message: "Book Not Found" });
+      }
+    } catch (error) {
+      logger.error("Error Viewing Details of Books", error);
+      if (error instanceof Error)
+        return next(new HttpException(500, "Error Viewing Book Details"));
+      console.log("Error occurred:");
     }
   };
 }
