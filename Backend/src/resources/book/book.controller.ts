@@ -39,6 +39,7 @@ class BookController {
 
     this.router.get("/book/list-book", this.ListBooks);
     this.router.get("/book/view-book-details/:id", this.viewBookDetails);
+    this.router.post("/book/search", this.SearchBook);
   }
 
   private PostBook = async (
@@ -184,6 +185,21 @@ class BookController {
       if (error instanceof Error)
         return next(new HttpException(500, "Error Viewing Book Details"));
       console.log("Error occurred:");
+    }
+  };
+
+  public SearchBook = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<Response | void> => {
+    try {
+      const { title } = req.body;
+      const book = await this.bookService.searchBook(title);
+      res.status(400).json({ success: true, message: "Success", book });
+    } catch (error) {
+      console.log("Error Searching for Book", error);
+      return next(new HttpException(500, "Unable to search for books"));
     }
   };
 }
