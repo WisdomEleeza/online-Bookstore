@@ -134,6 +134,29 @@ class BookService {
       if (error instanceof Error) throw new Error("Error Viewing Book Details");
     }
   }
+
+  //Method for API Business Logic to Search Books
+  public async searchBook(title: string): Promise<Book | null> {
+    try {
+      const books = await this.prisma.book.findMany({
+        where: { title: title },
+      });
+
+      if (books.length === 0) {
+        // No books found
+        return null;
+      }
+
+      // Assuming you want to return the first matching book
+      return books[0];
+    } catch (error) {
+      console.error("Error Searching Book", error);
+      if (error instanceof Error) throw new Error("Error Searching Book");
+
+      // Explicitly return null in case of an error
+      return null;
+    }
+  }
 }
 
 export default BookService;
