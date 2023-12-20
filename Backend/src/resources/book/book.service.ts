@@ -136,25 +136,34 @@ class BookService {
   }
 
   //Method for API Business Logic to Search Books
-  public async searchBook(title: string): Promise<Book | null> {
+  public async searchBook(
+    title: string,
+    author: string,
+    page: number,
+    pageSize: number,
+  ): Promise<Book[] | void> {
     try {
+      const safePage = Math.max(1, page);
+      const skip = (safePage - 1) * pageSize;
+      const take = pageSize + 1;
+
+      console.log("skip:", skip, "take:", take);
+
       const books = await this.prisma.book.findMany({
-        where: { title: title },
+        where: {
+          title: { contains: title, mode: "insensitive" },
+          author: { contains: author, mode: "insensitive" },
+        },
+        skip,
+        take,
       });
 
-      if (books.length === 0) {
-        // No books found
-        return null;
-      }
+      console.log("books::2", books);
 
-      // Assuming you want to return the first matching book
-      return books[0];
+      return books;
     } catch (error) {
       console.error("Error Searching Book", error);
       if (error instanceof Error) throw new Error("Error Searching Book");
-
-      // Explicitly return null in case of an error
-      return null;
     }
   }
 }
