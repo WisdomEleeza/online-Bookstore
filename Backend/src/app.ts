@@ -1,4 +1,3 @@
-// app.ts
 import express, { Application, urlencoded } from "express";
 import compression from "compression";
 import cors from "cors";
@@ -21,10 +20,10 @@ class App {
     this.express = express();
     this.port = port;
 
-    this.initialiseMiddleware();
     this.initialiseDatabase();
-    this.initialiseErrorMiddleware();
     this.initialiseController();
+    this.initialiseMiddleware();
+    this.initialiseErrorMiddleware();
   }
 
   private initialiseMiddleware(): void {
@@ -38,19 +37,20 @@ class App {
   }
 
   private initialiseController(): void {
-    // Instantiate BookService
-    const bookService = new BookService();
-    // Inject BookService into the BookController
-    const bookController = new BookController(bookService);
-    // Add Routes from Controllers
-    this.express.use("/api/v1", bookController.router);
-
     // Instantiate UserService
     const userServices = new UserServices();
     // Inject UserService into the UserController
     const userController = new UserController(userServices);
     // Add Routes from Controllers
     this.express.use("/api/v1", userController.router);
+
+    // Instantiate BookService
+    const bookService = new BookService();
+    // Inject BookService into the BookController
+    const bookController = new BookController(bookService);
+
+    // Add Routes from Controllers
+    this.express.use("/api/v1", bookController.router);
   }
 
   private initialiseErrorMiddleware(): void {
@@ -59,17 +59,27 @@ class App {
   }
 
   private initialiseDatabase(): void {
-    // Set up database connection
-    const { POSTGRES_USER, POSTGRES_PASSWORD, POSTGRES_PATH } = process.env;
+    try {
+      // Set up database connection
+      const { POSTGRES_USER, POSTGRES_PASSWORD, POSTGRES_PATH } = process.env;
 
-    // Use these variables for PostgreSQL connection
-    this.prisma = new PrismaClient({
-      datasources: {
-        db: {
-          url: `postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}${POSTGRES_PATH}`,
+      if (!POSTGRES_USER || !POSTGRES_PASSWORD || !POSTGRES_PATH) {
+        throw new Error(
+          "Database environment variables are not properly configured.",
+        );
+      }
+
+      this.prisma = new PrismaClient({
+        datasources: {
+          db: {
+            url: `postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}${POSTGRES_PATH}`,
+          },
         },
-      },
-    });
+      });
+    } catch (error) {
+      logger.error("Error initializing database:", error);
+      process.exit(1); // Exit the process if the database cannot be initialized
+    }
   }
 
   public listen(): void {

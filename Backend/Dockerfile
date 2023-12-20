@@ -32,4 +32,4 @@ RUN npx prisma generate
 EXPOSE 5000
 
 # Set the default command to start the application
-CMD ["npm", "run", "server"]
+CMD ["npm", "start"]

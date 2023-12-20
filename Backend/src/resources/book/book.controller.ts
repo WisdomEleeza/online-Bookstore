@@ -39,7 +39,7 @@ class BookController {
 
     this.router.get("/book/list-book", this.ListBooks);
     this.router.get("/book/view-book-details/:id", this.viewBookDetails);
-    this.router.post("/book/search", this.SearchBook);
+    this.router.get("/book/search", this.searchBooks);
   }
 
   private PostBook = async (
@@ -154,12 +154,12 @@ class BookController {
         listBooks,
       });
     } catch (error) {
-      res
-        .status(500)
-        .json({ success: false, message: "Internal Server Error" });
+      // res
+      //   .status(500)
+      //   .json({ success: false, message: "Internal Server Error" });
       logger.info("Error Listing Books");
       if (error instanceof Error)
-        return next(new HttpException(500, error.message));
+        return next(new HttpException(500, "Error Listing Books"));
     }
   };
 
@@ -188,20 +188,38 @@ class BookController {
     }
   };
 
-  public SearchBook = async (
+  public async searchBooks(
     req: Request,
     res: Response,
     next: NextFunction,
-  ): Promise<Response | void> => {
+  ): Promise<Response | void> {
     try {
-      const { title } = req.body;
-      const book = await this.bookService.searchBook(title);
-      res.status(400).json({ success: true, message: "Success", book });
+      const title = req.query.title as string;
+      const author = req.query.author as string;
+      const skip = parseInt(req.query.skip as string) || 0;
+      const take = parseInt(req.query.take as string) || 10;
+
+      console.log("title", title);
+      console.log("author", author);
+      console.log("skip", skip, "take", take);
+
+      // const book = await this.bookService.searchBook(title, author, skip, take);
+      const books = await this.bookService.searchBook(title, author, skip, take)
+
+      console.log("I can't find the problem to bookService undefined");
+
+      console.log("Books::", books);
+
+      res.status(200).json({ books });
     } catch (error) {
-      console.log("Error Searching for Book", error);
-      return next(new HttpException(500, "Unable to search for books"));
+      console.log(error)
+      if (error instanceof Error)
+      console.log("Error Searching Books", error.message);
+        return next(
+          new HttpException(500, "Error exception during book search"),
+        );
     }
-  };
+  }
 }
 
 export default BookController;
