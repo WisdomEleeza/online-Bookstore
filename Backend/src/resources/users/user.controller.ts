@@ -20,7 +20,7 @@ class UserController {
     // Register route
     this.router.post(
       "/users/register",
-      validationMiddleware(validation.register),
+      // validationMiddleware(validation.register),
       this.register,
     );
 
@@ -49,6 +49,7 @@ class UserController {
       // Extract user registration data from the request body
       const { name, email, password, shippingAddress, paymentMethod } =
         req.body;
+      console.log("Boody", req.body);
 
       // Register the user and get the authentication token
       const token = await this.userServices.register(
@@ -73,6 +74,7 @@ class UserController {
           .json({ success: false, message: "User already exists" });
       }
     } catch (error) {
+      console.log("Error", error);
       // Handle errors
       if (error instanceof Error)
         return next(new HttpException(400, error.message));

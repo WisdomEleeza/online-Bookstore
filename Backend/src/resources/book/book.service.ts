@@ -2,7 +2,7 @@ import logger from "../../utils/logger";
 import { Book, PrismaClient } from "@prisma/client";
 
 class BookService {
-  private prisma: PrismaClient;
+  public prisma: PrismaClient;
 
   constructor() {
     this.prisma = new PrismaClient();
@@ -39,7 +39,7 @@ class BookService {
       return book;
     } catch (error) {
       logger.info("Error creating book", error);
-      throw new Error("Unable to create book");
+      throw new Error("Book already Exist");
     }
   }
 
@@ -135,19 +135,21 @@ class BookService {
     }
   }
 
+  public async getbook() {
+    console.log("title");
+  }
+
   //Method for API Business Logic to Search Books
   public async searchBook(
     title: string,
     author: string,
     page: number,
     pageSize: number,
-  ): Promise<Book[] | void> {
+  ) {
     try {
       const safePage = Math.max(1, page);
       const skip = (safePage - 1) * pageSize;
       const take = pageSize + 1;
-
-      console.log("skip:", skip, "take:", take);
 
       const books = await this.prisma.book.findMany({
         where: {
@@ -157,8 +159,6 @@ class BookService {
         skip,
         take,
       });
-
-      console.log("books::2", books);
 
       return books;
     } catch (error) {

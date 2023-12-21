@@ -120,6 +120,8 @@ class BookController {
   ): Promise<Response | void> => {
     try {
       const { id } = req.params;
+      console.log("Params", req.params);
+
       const book = await this.bookService.deleteBook(id); // Using injected bookService
 
       res
@@ -199,25 +201,22 @@ class BookController {
       const skip = parseInt(req.query.skip as string) || 0;
       const take = parseInt(req.query.take as string) || 10;
 
-      console.log("title", title);
-      console.log("author", author);
-      console.log("skip", skip, "take", take);
-
-      // const book = await this.bookService.searchBook(title, author, skip, take);
-      const books = await this.bookService.searchBook(title, author, skip, take)
-
       console.log("I can't find the problem to bookService undefined");
+      // const book = await this.bookService.getbook();
+      const books = await this.bookService.searchBook(
+        title,
+        author,
+        skip,
+        take,
+      );
 
-      console.log("Books::", books);
-
+      // console.log("Books::", book);
       res.status(200).json({ books });
     } catch (error) {
-      console.log(error)
+      console.log(error);
       if (error instanceof Error)
-      console.log("Error Searching Books", error.message);
-        return next(
-          new HttpException(500, "Error exception during book search"),
-        );
+        console.log("Error Searching Books", error.message);
+      return next(new HttpException(500, "Error exception during book search"));
     }
   }
 }
