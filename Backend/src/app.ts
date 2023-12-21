@@ -19,12 +19,13 @@ class App {
   constructor(port: number) {
     this.express = express();
     this.port = port;
-
+    
+    this.initialiseMiddleware();
     this.initialiseDatabase();
     this.initialiseController();
-    this.initialiseMiddleware();
     this.initialiseErrorMiddleware();
   }
+
 
   private initialiseMiddleware(): void {
     // Set up middleware
@@ -33,12 +34,14 @@ class App {
     this.express.use(cors());
     this.express.use(morgan("dev"));
     this.express.use(express.json());
-    this.express.use(urlencoded({ extended: true }));
+    this.express.use(urlencoded({ extended: false }));
   }
 
   private initialiseController(): void {
     // Instantiate UserService
     const userServices = new UserServices();
+    // console.log(userServices);
+    
     // Inject UserService into the UserController
     const userController = new UserController(userServices);
     // Add Routes from Controllers
