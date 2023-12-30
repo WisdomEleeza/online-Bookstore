@@ -4,7 +4,7 @@
   "description": "An API for online-bookstore",
   "main": "index.js",
   "scripts": {
-    "test": "jest",
+    "test": "jest --watch --no-catche",
     "prisma": "npx prisma format",
     "build": "rimraf dist && npx tsc",
     "prestart": "npm run build",
