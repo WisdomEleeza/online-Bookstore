@@ -1,4 +1,4 @@
-import BookService from '../../book/book.service'
+import BookService from "../../book/book.service";
 
 // Mock the Prisma client
 jest.mock("@prisma/client", () => ({
@@ -101,4 +101,24 @@ describe("BookService", () => {
   });
 
   // Add more describe blocks for other methods (updateBook, deleteBook, ListBooks, viewBookDetails, searchBook)
+
+  describe("Update Book", () => {
+    it("should update book successfully", async () => {});
+  });
+
+  describe("Delete Book", () => {
+    it("should delete book successfully", () => {});
+  });
+
+  describe("List Book with pagination", () => {
+    it("should list all books", () => {});
+  });
+
+  describe("View Book Details", () => {
+    it("should view book details", () => {});
+  });
+
+  describe("Search Book", () => {
+    it("should search book with pagination", () => {});
+  });
 });
