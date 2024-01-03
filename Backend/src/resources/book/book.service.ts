@@ -71,7 +71,9 @@ class BookService {
       return bookUpdate;
     } catch (error) {
       logger.info("Error Updating Book", error);
-      throw new Error("Error Occurred During Book Updating");
+      console.log("Error", error);
+      // throw new Error("Error Occurred During Book Updating");
+      throw new Error("Book Not Found");
     }
   }
 
