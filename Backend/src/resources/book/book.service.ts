@@ -90,7 +90,7 @@ class BookService {
       return BookDelete;
     } catch (error) {
       logger.info("Error Deleting Book", error);
-      throw new Error("Unable to Delete Book");
+      throw new Error("Book Not Found");
     }
   }
 
@@ -137,9 +137,9 @@ class BookService {
     }
   }
 
-  public async getbook() {
-    console.log("title");
-  }
+  // public async getbook() {
+  //   console.log("title");
+  // }
 
   //Method for API Business Logic to Search Books
   public async searchBook(
