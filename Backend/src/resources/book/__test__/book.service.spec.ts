@@ -190,7 +190,20 @@ describe("BookService", () => {
     });
 
     it('should delete book successfully', async ()=> {
-       (bookService.prisma.book.findUnique)
+      // Mock the findUnique method to return an existing book
+      const existingBook = {
+        id: "1",
+        title: "Existing Book",
+        author: "Existing Author",
+        ISBN: "0987654321",
+        genre: "Non-Fiction",
+        price: 29.99,
+        quantityAvailable: 5,
+      };
+      (bookService.prisma.book.findUnique as jest.Mock).mockResolvedValue(existingBook)
+
+      // Mock the delete method to return the deleted book
+      (bookService.prisma.book.delete as jest.Mock).mockResolvedValue(existingBook)
     })
   });
 
