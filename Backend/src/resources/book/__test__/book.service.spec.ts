@@ -177,19 +177,23 @@ describe("BookService", () => {
 
   describe("Delete Book", () => {
     it("should throw 'Book Not Found' error", async () => {
-      // Mock the findFirst method to return null, indicating that the book doesn't exist
-      (bookService.prisma.book.findFirst as jest.Mock).mockResolvedValue(null);
+      // Mock the findUnique method to return null, indicating that the book doesn't exist
+      (bookService.prisma.book.findUnique as jest.Mock).mockResolvedValue(null);
 
       // Call the deleteBook method and expect it to throw an error
-      expect(bookService.deleteBook("1")).rejects.toThrow("Book Not Found");
+      await expect(bookService.deleteBook("1")).rejects.toThrow(
+        "Book Not Found",
+      );
 
       // Verify that findUnique method was called with the expected arguments
       expect(
         bookService.prisma.book.findUnique as jest.Mock,
-      ).toHaveBeenCalledWith({ where: { id: "1" } });
+      ).toHaveBeenCalledWith({
+        where: { id: "1" },
+      });
     });
 
-    it('should delete book successfully', async ()=> {
+    it("should delete book successfully", async () => {
       // Mock the findUnique method to return an existing book
       const existingBook = {
         id: "1",
@@ -200,11 +204,26 @@ describe("BookService", () => {
         price: 29.99,
         quantityAvailable: 5,
       };
-      (bookService.prisma.book.findUnique as jest.Mock).mockResolvedValue(existingBook)
+      (bookService.prisma.book.findUnique as jest.Mock).mockResolvedValue(
+        existingBook,
+      );
 
-      // Mock the delete method to return the deleted book
-      (bookService.prisma.book.delete as jest.Mock).mockResolvedValue(existingBook)
-    })
+      // Call the deleteBook method
+      const deletedBook = await bookService.deleteBook("1");
+
+      // Assert the results
+      expect(deletedBook).toBeUndefined(); // Since your deleteBook method returns void
+
+      // Verify that findUnique and delete methods were called with the expected arguments
+      expect(
+        bookService.prisma.book.findUnique as jest.Mock,
+      ).toHaveBeenCalledWith({
+        where: { id: "1" },
+      });
+      expect(bookService.prisma.book.delete as jest.Mock).toHaveBeenCalledWith({
+        where: { id: "1" },
+      });
+    });
   });
 
   describe("List Book with pagination", () => {
@@ -219,3 +238,4 @@ describe("BookService", () => {
     it("should search book with pagination", () => {});
   });
 });
+ 
