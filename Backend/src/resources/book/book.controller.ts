@@ -120,19 +120,20 @@ class BookController {
   ): Promise<Response | void> => {
     try {
       const { id } = req.params;
-      console.log("Params", req.params);
 
-      const book = await this.bookService.deleteBook(id); // Using injected bookService
+      await this.bookService.deleteBook(id); // Using injected bookService
 
-      res
-        .status(200)
-        .json({ success: true, message: "Book Deleted Successfully", book });
+      // Confirm the deletion before sending a success response
+      const deletedBook = await this.bookService.viewBookDetails(id);
+      if (!deletedBook) {
+        res
+          .status(200)
+          .json({ success: true, message: "Book Deleted Successfully" });
+      } else {
+        res.status(404).json({ success: false, message: "Book Not Found" });
+      }
     } catch (error) {
       if (error instanceof Error) {
-        res
-          .status(500)
-          .json({ success: false, message: "Internal Server Error" });
-
         logger.info("Error Deleting Book", error);
         return next(new HttpException(500, error.message));
       }
