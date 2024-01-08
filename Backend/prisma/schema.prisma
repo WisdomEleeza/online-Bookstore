@@ -1,41 +1,65 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
+// Prisma schema for an online bookstore
 
+// Prisma client configuration
 generator client {
   provider = "prisma-client-js"
 }
 
+// Database configuration
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
+// User model represents a user in the system
 model User {
-  id              String   @id @default(uuid())
-  name            String
-  email           String   @unique()
-  password        String
-  role            Role   @default(USER)
-  books           Book[]
-  shippingAddress String?
-  paymentMethod   String?  @default("")
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt()
+  id              String        @id @default(uuid()) // Unique identifier for each user
+  name            String        // User's name
+  email           String        @unique() // User's unique email address
+  password        String        // User's password (hashed for security)
+  role            Role          @default(USER) // User's role (USER or ADMIN)
+  books           Book[]        // Relation to books associated with the user
+  shoppingCart    ShoppingCart? // Relation to the user's shopping cart (one-to-one)
+  shippingAddress String?       // User's shipping address
+  paymentMethod   String?       @default("") // User's payment method
+  createdAt       DateTime      @default(now()) // Timestamp for user creation
+  updatedAt       DateTime      @updatedAt() // Timestamp for last user update
 }
 
+// Book model represents a book in the bookstore
 model Book {
-  id                String @id @default(uuid())
-  title             String
-  author            String
-  ISBN              String
-  genre             String
-  price             Float
-  quantityAvailable Int
-  userId            String
-  user              User   @relation(fields: [userId], references: [id])
+  id                String @id @default(uuid()) // Unique identifier for each book
+  title             String // Book's title
+  author            String // Book's author
+  ISBN              String // International Standard Book Number
+  genre             String // Book's genre
+  price             Float  // Book's price
+  quantityAvailable Int    // Quantity of available copies
+  userId            String // Foreign key referencing the User model
+  user              User   @relation(fields: [userId], references: [id]) // Relation to the user who added the book
+  shoppingCartItem  ShoppingCartItem? // Relation to the shopping cart item (one-to-one)
 }
 
-enum Role {
-  USER
-  ADMIN
+// ShoppingCart model represents a user's shopping cart
+model ShoppingCart {
+  id     String @id @default(uuid()) // Unique identifier for each shopping cart
+  userId String @unique() // Foreign key referencing the User model
+  user   User   @relation(fields: [userId], references: [id]) // Relation to the user who owns the shopping cart (one-to-one)
+  items  ShoppingCartItem[] // Relation to the items in the shopping cart (one-to-many)
 }
+
+// ShoppingCartItem model represents an item in the shopping cart
+model ShoppingCartItem {
+  id              String @id @default(uuid()) // Unique identifier for each shopping cart item
+  bookId          String @unique // Foreign key referencing the Book model
+  book            Book   @relation(fields: [bookId], references: [id]) // Relation to the book associated with the item
+  shoppingCart    ShoppingCart @relation(fields: [shoppingCartId], references: [id]) // Relation to the shopping cart (many-to-one)
+  shoppingCartId  String // Foreign key referencing the ShoppingCart model
+}
+
+// Enumeration for user roles
+enum Role {
+  USER  // Regular user
+  ADMIN // Administrator
+}
+
