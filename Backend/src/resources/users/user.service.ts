@@ -38,7 +38,10 @@ class UserServices {
     }
   }
 
-  public async login(email: string, password: string): Promise<string> {
+  public async login(
+    email: string,
+    password: string,
+  ): Promise<{ userId: string; token: string }> {
     try {
       const user = await this.prisma.user.findUnique({
         where: { email },
@@ -49,7 +52,9 @@ class UserServices {
       const hashedPassword = await bcrypt.compare(password, user.password);
 
       if (hashedPassword) {
-        return token.createToken(user);
+        const tokken = token.createToken(user)
+        return { userId: user.id, token: tokken}
+        // return token.createToken(user);
       } else {
         throw new Error("Wrong credentials given");
       }
@@ -70,7 +75,7 @@ class UserServices {
     try {
       // Find the user in the database
       const user = await this.prisma.user.findUnique({
-        where: { id: userId },
+        where: { id: String(userId) },
       });
 
       if (!user) throw new Error("User not found");

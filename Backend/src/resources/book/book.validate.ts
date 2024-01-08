@@ -9,9 +9,9 @@ const BookValidation = Joi.object({
 
   genre: Joi.string().max(255).required(),
 
-  price: Joi.number().max(255).required(),
+  price: Joi.number().max(10000).required(),
 
-  quantityAvailable: Joi.number().max(255).required(),
+  quantityAvailable: Joi.number().max(10000).required(),
 });
 
 export default { BookValidation };

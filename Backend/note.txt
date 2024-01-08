@@ -1,0 +1,19 @@
+# Edge Cases
+ - if one or more users have the same book with same title, they must be able to create the book
+ - but one user cannot create a book with the same title
+ - I have to look at this Edge Cases later (take note)
+
+# - users should be able to create multiple books
+
+-------------------
+
+# In this example: Pagination
+
+# page represents the current page number.
+# pageSize represents the number of records to be displayed on each page.
+# The take parameter is set to pageSize + 1 to fetch one extra record beyond the current page size. 
+# If the length of the result set is greater than the pageSize, it means there are more records available.
+
+# The hasMore variable is set based on whether there are more records beyond the current page. 
+# If hasMore is true, it indicates that there are more records, 
+# and you can use this information to display a "Load More" button or implement other pagination controls in your UI.
