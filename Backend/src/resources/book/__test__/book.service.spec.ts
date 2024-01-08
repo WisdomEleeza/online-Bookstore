@@ -226,16 +226,79 @@ describe("BookService", () => {
     });
   });
 
-  describe("List Book with pagination", () => {
-    it("should list all books", () => {});
+  describe("List Book", () => {
+    it("should list all books", async () => {
+      const listBooks = [
+        {
+          id: "1",
+          title: "Title 1",
+          author: "Author 1",
+          ISBN: "209873897ADB",
+          genre: "Fiction",
+          price: 29.99,
+          quantityAvailable: 5,
+        },
+        {
+          id: "2",
+          title: "Title 2",
+          author: "Author 2",
+          ISBN: "209873897ADB",
+          genre: "Fiction",
+          price: 29.99,
+          quantityAvailable: 5,
+        },
+        {
+          id: "3",
+          title: "Title 3",
+          author: "Author 3",
+          ISBN: "209873897ADB",
+          genre: "Fiction",
+          price: 29.99,
+          quantityAvailable: 5,
+        },
+        {
+          id: "4",
+          title: "Title 4",
+          author: "Author 4",
+          ISBN: "209873897ADB",
+          genre: "Fiction",
+          price: 29.99,
+          quantityAvailable: 5,
+        },
+        {
+          id: "5",
+          title: "Title 5",
+          author: "Author 5",
+          ISBN: "209873897ADB",
+          genre: "Fiction",
+          price: 29.99,
+          quantityAvailable: 5,
+        },
+      ];
+      (bookService.prisma.book.findMany as jest.Mock).mockResolvedValue({
+        listBooks,
+        hasMore: false,
+      });
+
+      // Call the listBooks method
+      // const books = await bookService.ListBooks(1, 5);
+      // await bookService.ListBooks(1, 5);
+
+      // Assert the results
+      // expect(books).toHaveLength(listBooks.length);
+
+      // Verify that findMany method was called with the expected arguments
+      //   expect(
+      //     bookService.prisma.book.findMany as jest.Mock,
+      //   ).toHaveBeenCalledWith({ skip: 0, take: 5 });
+    });
   });
 
-  describe("View Book Details", () => {
-    it("should view book details", () => {});
+  describe("Describe View Book Details", () => {
+    it("it should view book details", () => {});
   });
 
   describe("Search Book", () => {
     it("should search book with pagination", () => {});
   });
 });
- 

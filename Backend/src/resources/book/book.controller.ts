@@ -156,10 +156,9 @@ class BookController {
         message: "Successfully Listed Books",
         listBooks,
       });
+      console.log(listBooks);
+      
     } catch (error) {
-      // res
-      //   .status(500)
-      //   .json({ success: false, message: "Internal Server Error" });
       logger.info("Error Listing Books");
       if (error instanceof Error)
         return next(new HttpException(500, "Error Listing Books"));
