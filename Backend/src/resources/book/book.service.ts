@@ -98,7 +98,7 @@ class BookService {
   public async ListBooks(
     page: number,
     pageSize: number,
-  ): Promise<{ books: Book[]; hasMore: boolean } | void> {
+  ): Promise<Book[] | void> {
     try {
       // Ensure that page is always greater than or equal to 1
       const safePage = Math.max(1, page);
@@ -112,13 +112,12 @@ class BookService {
       // If there's one extra record, remove it from the result set
       if (hasMore) listBooks.pop();
 
-      return { books: listBooks, hasMore };
+      return listBooks;
     } catch (error) {
       logger.error("Error Occurred During Book Listing");
       if (error instanceof Error) throw new Error("Error Listing Books");
     }
   }
-  // Create API endpoints for listing books, viewing book details, searching, and filtering.
 
   //Method for API Business Logic to View Books Details
   public async viewBookDetails(id: string): Promise<Book | void> {
@@ -133,7 +132,7 @@ class BookService {
     } catch (error) {
       console.log("Error:::", error);
       logger.error("Error viewing books");
-      if (error instanceof Error) throw new Error("Error Viewing Book Details");
+      if (error instanceof Error) throw new Error(error.message);
     }
   }
 
