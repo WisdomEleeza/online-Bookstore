@@ -11,8 +11,8 @@ const logger = winston.createLogger({
   defaultMeta: { service: "my-service" }, // Set default metadata for log entries
   transports: [
     new winston.transports.Console(), // Log to the console
-    new winston.transports.File({ filename: "error.log", level: "error" }), // Log errors to 'error.log'
-    new winston.transports.File({ filename: "combined.log" }), // Log all levels to 'combined.log'
+    // new winston.transports.File({ filename: "error.log", level: "error" }), // Log errors to 'error.log'
+    // new winston.transports.File({ filename: "combined.log" }), // Log all levels to 'combined.log'
   ],
 });
 

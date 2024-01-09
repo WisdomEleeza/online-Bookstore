@@ -53,8 +53,8 @@ model ShoppingCartItem {
   id              String @id @default(uuid()) // Unique identifier for each shopping cart item
   bookId          String @unique // Foreign key referencing the Book model
   book            Book   @relation(fields: [bookId], references: [id]) // Relation to the book associated with the item
-  shoppingCart    ShoppingCart @relation(fields: [shoppingCartId], references: [id]) // Relation to the shopping cart (many-to-one)
   shoppingCartId  String // Foreign key referencing the ShoppingCart model
+  shoppingCart    ShoppingCart @relation(fields: [shoppingCartId], references: [id]) // Relation to the shopping cart (many-to-one)
 }
 
 // Enumeration for user roles
