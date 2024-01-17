@@ -1,17 +1,21 @@
 import BookService from "../../book/book.service";
 
+// Manually create a mock for Prisma client
+const prismaMock = {
+  book: {
+    findFirst: jest.fn(),
+    create: jest.fn(),
+    findUnique: jest.fn(),
+    update: jest.fn(),
+    delete: jest.fn(),
+    findMany: jest.fn(),
+  },
+  // Add other models as needed
+};
+
 // Mock the Prisma client
 jest.mock("@prisma/client", () => ({
-  PrismaClient: jest.fn(() => ({
-    book: {
-      findFirst: jest.fn(),
-      create: jest.fn(),
-      findUnique: jest.fn(),
-      update: jest.fn(),
-      delete: jest.fn(),
-      findMany: jest.fn(),
-    },
-  })),
+  PrismaClient: jest.fn(() => prismaMock),
 }));
 
 describe("BookService", () => {
@@ -23,11 +27,10 @@ describe("BookService", () => {
 
   describe("CreateBook", () => {
     it("should create a book successfully", async () => {
-      // Mock the findFirst method to return null, indicating that the book doesn't exist
-      (bookService.prisma.book.findFirst as jest.Mock).mockResolvedValue(null);
+      // Arrange
+      prismaMock.book.findFirst.mockResolvedValue(null);
 
-      // Mock the create method to return a dummy book
-      (bookService.prisma.book.create as jest.Mock).mockResolvedValue({
+      prismaMock.book.create.mockResolvedValue({
         id: "1",
         userId: "user123",
         title: "Test Book",
@@ -38,6 +41,7 @@ describe("BookService", () => {
         quantityAvailable: 10,
       });
 
+      // Act
       const createdBook = await bookService.CreateBook(
         "user123",
         "Test Book",
@@ -48,17 +52,16 @@ describe("BookService", () => {
         10,
       );
 
+      // Assert
       expect(createdBook).toBeDefined();
       expect(createdBook.title).toBe("Test Book");
       expect(createdBook.author).toBe("Test Author");
 
       // Verify that findFirst and create methods were called with the expected arguments
-      expect(
-        bookService.prisma.book.findFirst as jest.Mock,
-      ).toHaveBeenCalledWith({
+      expect(prismaMock.book.findFirst).toHaveBeenCalledWith({
         where: { title: "Test Book" },
       });
-      expect(bookService.prisma.book.create as jest.Mock).toHaveBeenCalledWith({
+      expect(prismaMock.book.create).toHaveBeenCalledWith({
         data: {
           user: { connect: { id: "user123" } },
           title: "Test Book",
@@ -72,8 +75,8 @@ describe("BookService", () => {
     });
 
     it("should throw an error if the book already exists", async () => {
-      // Mock the findFirst method to return an existing book
-      (bookService.prisma.book.findFirst as jest.Mock).mockResolvedValue({
+      // Arrange
+      prismaMock.book.findFirst.mockResolvedValue({
         id: "2",
         userId: "user456",
         title: "Existing Book",
@@ -84,6 +87,7 @@ describe("BookService", () => {
         quantityAvailable: 5,
       });
 
+      // Act and Assert
       await expect(
         bookService.CreateBook(
           "user456",
@@ -102,10 +106,10 @@ describe("BookService", () => {
 
   describe("Update Book", () => {
     it("should throw 'Book Not Found' error", async () => {
-      // Mock the Prisma client to return null, indicating the book is not found
-      (bookService.prisma.book.findUnique as jest.Mock).mockResolvedValue(null);
+      // Arrange
+      prismaMock.book.findUnique.mockResolvedValue(null);
 
-      // Call the updateBook method and expect it to throw an error
+      // Act and Assert
       await expect(
         bookService.updateBook("1", {
           title: "Updated Book Title",
@@ -118,15 +122,13 @@ describe("BookService", () => {
       ).rejects.toThrow("Book Not Found");
 
       // Verify that findUnique method was called with the expected arguments
-      expect(
-        bookService.prisma.book.findUnique as jest.Mock,
-      ).toHaveBeenCalledWith({
+      expect(prismaMock.book.findUnique).toHaveBeenCalledWith({
         where: { id: "1" },
       });
     });
 
     it("should update book successfully", async () => {
-      // Mock the Prisma client to return an existing book
+      // Arrange
       const existingBook = {
         id: "1",
         title: "Existing Book",
@@ -136,11 +138,8 @@ describe("BookService", () => {
         price: 29.99,
         quantityAvailable: 5,
       };
-      (bookService.prisma.book.findUnique as jest.Mock).mockResolvedValue(
-        existingBook,
-      );
+      prismaMock.book.findUnique.mockResolvedValue(existingBook);
 
-      // Mock the Prisma client's update method to return the updated book data
       const updatedBookData = {
         title: "Updated Book Title",
         author: "Updated Author",
@@ -149,52 +148,50 @@ describe("BookService", () => {
         price: 19.99,
         quantityAvailable: 10,
       };
-      (bookService.prisma.book.update as jest.Mock).mockResolvedValue({
+      prismaMock.book.update.mockResolvedValue({
         ...existingBook,
         ...updatedBookData,
       });
 
-      // Call the updateBook method
+      // Act
       const updatedBook = await bookService.updateBook("1", updatedBookData);
 
-      // Assert the results
+      // Assert
       expect(updatedBook).toBeDefined();
       expect(updatedBook.title).toBe("Updated Book Title");
       expect(updatedBook.author).toBe("Updated Author");
 
       // Verify that findUnique and update methods were called with the expected arguments
-      expect(
-        bookService.prisma.book.findUnique as jest.Mock,
-      ).toHaveBeenCalledWith({
+      expect(prismaMock.book.findUnique).toHaveBeenCalledWith({
         where: { id: "1" },
       });
-      expect(bookService.prisma.book.update as jest.Mock).toHaveBeenCalledWith({
+      expect(prismaMock.book.update).toHaveBeenCalledWith({
         where: { id: "1" },
         data: updatedBookData,
       });
     });
+
+    // Add more test cases for different scenarios
   });
 
   describe("Delete Book", () => {
     it("should throw 'Book Not Found' error", async () => {
-      // Mock the findUnique method to return null, indicating that the book doesn't exist
-      (bookService.prisma.book.findUnique as jest.Mock).mockResolvedValue(null);
+      // Arrange
+      prismaMock.book.findUnique.mockResolvedValue(null);
 
-      // Call the deleteBook method and expect it to throw an error
+      // Act and Assert
       await expect(bookService.deleteBook("1")).rejects.toThrow(
         "Book Not Found",
       );
 
       // Verify that findUnique method was called with the expected arguments
-      expect(
-        bookService.prisma.book.findUnique as jest.Mock,
-      ).toHaveBeenCalledWith({
+      expect(prismaMock.book.findUnique).toHaveBeenCalledWith({
         where: { id: "1" },
       });
     });
 
     it("should delete book successfully", async () => {
-      // Mock the findUnique method to return an existing book
+      // Arrange
       const existingBook = {
         id: "1",
         title: "Existing Book",
@@ -204,30 +201,29 @@ describe("BookService", () => {
         price: 29.99,
         quantityAvailable: 5,
       };
-      (bookService.prisma.book.findUnique as jest.Mock).mockResolvedValue(
-        existingBook,
-      );
+      prismaMock.book.findUnique.mockResolvedValue(existingBook);
 
-      // Call the deleteBook method
+      // Act
       const deletedBook = await bookService.deleteBook("1");
 
-      // Assert the results
-      expect(deletedBook).toBeUndefined(); // Since your deleteBook method returns void
+      // Assert
+      expect(deletedBook).toBeUndefined();
 
       // Verify that findUnique and delete methods were called with the expected arguments
-      expect(
-        bookService.prisma.book.findUnique as jest.Mock,
-      ).toHaveBeenCalledWith({
+      expect(prismaMock.book.findUnique).toHaveBeenCalledWith({
         where: { id: "1" },
       });
-      expect(bookService.prisma.book.delete as jest.Mock).toHaveBeenCalledWith({
+      expect(prismaMock.book.delete).toHaveBeenCalledWith({
         where: { id: "1" },
       });
     });
+
+    // Add more test cases for different scenarios
   });
 
   describe("List Book", () => {
     it("should list all books", async () => {
+      // Arrange
       const listBooks = [
         {
           id: "1",
@@ -238,67 +234,37 @@ describe("BookService", () => {
           price: 29.99,
           quantityAvailable: 5,
         },
-        {
-          id: "2",
-          title: "Title 2",
-          author: "Author 2",
-          ISBN: "209873897ADB",
-          genre: "Fiction",
-          price: 29.99,
-          quantityAvailable: 5,
-        },
-        {
-          id: "3",
-          title: "Title 3",
-          author: "Author 3",
-          ISBN: "209873897ADB",
-          genre: "Fiction",
-          price: 29.99,
-          quantityAvailable: 5,
-        },
-        {
-          id: "4",
-          title: "Title 4",
-          author: "Author 4",
-          ISBN: "209873897ADB",
-          genre: "Fiction",
-          price: 29.99,
-          quantityAvailable: 5,
-        },
-        {
-          id: "5",
-          title: "Title 5",
-          author: "Author 5",
-          ISBN: "209873897ADB",
-          genre: "Fiction",
-          price: 29.99,
-          quantityAvailable: 5,
-        },
+        // Add more book data as needed
       ];
-      (bookService.prisma.book.findMany as jest.Mock).mockResolvedValue({
-        listBooks,
-        hasMore: false,
-      });
+      prismaMock.book.findMany.mockResolvedValue(listBooks);
 
-      // Call the listBooks method
+      // Act
       // const books = await bookService.ListBooks(1, 5);
-      // await bookService.ListBooks(1, 5);
 
-      // Assert the results
+      // Assert
       // expect(books).toHaveLength(listBooks.length);
 
-      // Verify that findMany method was called with the expected arguments
-      //   expect(
-      //     bookService.prisma.book.findMany as jest.Mock,
-      //   ).toHaveBeenCalledWith({ skip: 0, take: 5 });
+      // // Verify that findMany method was called with the expected arguments
+      // expect(prismaMock.book.findMany).toHaveBeenCalledWith({
+      //   skip: 0,
+      //   take: 5,
+      // });
+    });
+
+    // Add more test cases for different scenarios
+  });
+
+  describe("View Book Details", () => {
+    // Add test cases for viewing book details
+    it("should view book details successfully", async () => {
+      // Add your test case logic here
     });
   });
 
-  describe("Describe View Book Details", () => {
-    it("it should view book details", () => {});
-  });
-
   describe("Search Book", () => {
-    it("should search book with pagination", () => {});
+    // Add test cases for searching books
+    it("should search books successfully", async () => {
+      // Add your test case logic here
+    });
   });
 });
