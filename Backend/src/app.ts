@@ -40,7 +40,6 @@ class App {
   private initialiseController(): void {
     // Instantiate UserService
     const userServices = new UserServices();
-    // console.log(userServices);
     
     // Inject UserService into the UserController
     const userController = new UserController(userServices);

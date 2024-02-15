@@ -30,7 +30,18 @@ describe("BookService", () => {
       // Arrange
       prismaMock.book.findFirst.mockResolvedValue(null);
 
-      prismaMock.book.create.mockResolvedValue({
+      // jest.spyOn(prismaMock.book, "create").mockRejectedValueOnce({
+      //   id: "1",
+      //   userId: "user123",
+      //   title: "Test Book",
+      //   author: "Test Author",
+      //   ISBN: "1234567890",
+      //   genre: "Fiction",
+      //   price: 19.99,
+      //   quantityAvailable: 10,
+      // });
+
+      prismaMock.book.create.mockResolvedValueOnce({
         id: "1",
         userId: "user123",
         title: "Test Book",
@@ -234,7 +245,6 @@ describe("BookService", () => {
           price: 29.99,
           quantityAvailable: 5,
         },
-        // Add more book data as needed
       ];
       prismaMock.book.findMany.mockResolvedValue(listBooks);
 
@@ -263,8 +273,6 @@ describe("BookService", () => {
 
   describe("Search Book", () => {
     // Add test cases for searching books
-    it("should search books successfully", async () => {
-      // Add your test case logic here
-    });
+    it("should search books successfully", async () => {});
   });
 });

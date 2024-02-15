@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import token from "../utils/token"; // Assuming token is an object with types
 import HttpException from "../utils/http.exception";
-import { JsonWebTokenError } from "jsonwebtoken"; // Import JsonWebTokenError from jsonwebtoken
+import { JsonWebTokenError } from "jsonwebtoken";
 import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
